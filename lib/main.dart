@@ -1,0 +1,41 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+
+
+
+void main() {
+  runApp(const Main());
+}
+
+
+
+
+class Main extends StatelessWidget {
+  const Main({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        // ChangeNotifierProvider(create: (_) => AuthProviderApp()),
+        // ChangeNotifierProvider(create: (_) => PengaduanProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Panda App',
+        theme: ThemeData(colorSchemeSeed: Colors.transparent),
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/',
+        // routes: {
+        //   '/': (context) => const SplashScreen(),
+        //   '/nav': (context) => const NavBottom(),
+        //   '/login': (context) => const LoginPage(),
+        //   '/home': (context) => const NavBottom(),
+        //   '/pengaduan': (context) => const PengaduanPage(),
+        //   '/riwayat_pengaduan': (context) => const RiwayatPengaduan(),
+        //   '/profile': (context) => const Profile(),
+        // },
+      ),
+    );
+  }
+}
