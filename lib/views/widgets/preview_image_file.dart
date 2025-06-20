@@ -2,6 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+/* * This file contains the PreviewImageFile widget which is used to preview image files.
+ * It displays the image in a full-screen view with a transparent app bar.
+ * The widget takes a File object as input and uses Image.file to display the image.
+ */
 class PreviewImageFile extends StatelessWidget {
   final File file;
 

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
+/* * This file contains the PreviewPage widget which displays a video or image
+ * based on the provided URL. It uses the VideoPlayerController for video playback
+ * and InteractiveViewer for image zooming.
+ */
 class PreviewPage extends StatefulWidget {
   final String url;
 
@@ -13,7 +17,7 @@ class PreviewPage extends StatefulWidget {
 class _PreviewPageState extends State<PreviewPage> {
   late VideoPlayerController _videoController;
   bool _isVideo = false;
-  
+
   @override
   void initState() {
     super.initState();

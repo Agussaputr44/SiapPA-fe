@@ -2,6 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:siappa/configs/api_config.dart';
 
+/* *
+ This file contains the AuthService class which handles authentication-related operations
+ such as login, registration and logout. It communicates with the backend API to perform these actions.
+ */
+
 class AuthService {
   Future<String> login(String email, String password) async {
     final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.login));

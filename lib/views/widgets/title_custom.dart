@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../utils/app_fonts.dart';
 
+/* * This file contains the TitleCustom widget which is a stateless widget
+ * that displays a custom title in the app bar with specific styling.
+ * It uses AppFonts for consistent text styling.
+ */
 class TitleCustom extends StatelessWidget {
   final String title;
 

@@ -1,3 +1,4 @@
+
 class ApiConfig {
   // Base URL and API version
   static const String baseUrl = "https://fancy-quick-lacewing.ngrok-free.app";
@@ -19,12 +20,12 @@ class ApiConfig {
   static const String uploadFiles = "/uploads";
 
   // === Artikels ===
-  static const String artikels = "/artikels"; 
-  static String artikelDetail(String id) => "/artikels/$id"; 
+  static const String artikels = "/artikels";
+  static String artikelDetail(String id) => "/artikels/$id";
 
   // === Pengaduans ===
-  static const String pengaduans = "/pengaduans"; 
-  static String pengaduanDetail(String id) => "/pengaduans/$id"; 
+  static const String pengaduans = "/pengaduans";
+  static String pengaduanDetail(String id) => "/pengaduans/$id";
 
   // Utility to build full URL
   static String buildUrl(String endpoint) => "$baseApiUrl$endpoint";

@@ -1,5 +1,9 @@
 import 'dart:convert';
 
+/* * 
+ * Description: Model class for Pengaduan (Complaint) in the application.
+ * This class represents a complaint made by a user, including details such as the victim's name,
+ */
 class Pengaduan {
   final String namaKorban;
   final String alamat;
@@ -26,10 +30,12 @@ class Pengaduan {
       aduan: json['aduan'] ?? '',
       kategoriKekerasan: json['kategoriKekerasan'] ?? '',
       harapan: json['harapan'] ?? '',
-      evidenceUrls: List<String>.from(
-          json['evidenceUrls'] is String ? jsonDecode(json['evidenceUrls']) : json['evidenceUrls'] ?? []),
-      evidencePaths: List<String>.from(
-          json['evidencePaths'] is String ? jsonDecode(json['evidencePaths']) : json['evidencePaths'] ?? []),
+      evidenceUrls: List<String>.from(json['evidenceUrls'] is String
+          ? jsonDecode(json['evidenceUrls'])
+          : json['evidenceUrls'] ?? []),
+      evidencePaths: List<String>.from(json['evidencePaths'] is String
+          ? jsonDecode(json['evidencePaths'])
+          : json['evidencePaths'] ?? []),
     );
   }
 

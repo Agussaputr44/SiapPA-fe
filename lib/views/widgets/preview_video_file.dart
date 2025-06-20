@@ -1,5 +1,9 @@
 import 'dart:io';
 
+/* * This file contains the PreviewScreen widget which is used to preview media files
+ * such as images and videos. It uses the VideoPlayer package for video playback.
+ * The widget checks the file type and displays the appropriate preview.
+ */
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 

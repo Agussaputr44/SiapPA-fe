@@ -1,14 +1,18 @@
-// lib/utils/app_fonts.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'app_colors.dart'; // Import AppColors untuk kombinasi dengan warna
+import 'app_colors.dart';
 
+/*
+ * This file contains the text styles used throughout the application.
+ * It defines primary font styles, headings, body text, and other text styles
+ * using Google Fonts for consistency and design.
+ */ //
+ 
 class AppFonts {
-
   static final TextStyle primaryFont = GoogleFonts.roboto();
   static final TextStyle heading1 = GoogleFonts.roboto(
     fontSize: 32.0,
-    fontWeight: FontWeight.w700, 
+    fontWeight: FontWeight.w700,
     letterSpacing: 0.5,
     color: AppColors.textPrimary,
   );

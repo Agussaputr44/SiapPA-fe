@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/auth_service.dart';
 
+/* * 
+This file contains the AuthProvider class which manages authentication state
+ * and provides methods for login, registration, and logout.
+ * It uses ChangeNotifier to notify listeners of changes in authentication state.
+ */
 class AuthProvider with ChangeNotifier {
   String? _token;
   final AuthService _authService = AuthService();
