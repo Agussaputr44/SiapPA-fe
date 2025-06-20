@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/**
+/*
  * this file contains the color definitions used throughout the application.
  * It defines primary, secondary, and text colors for consistent theming.
  */

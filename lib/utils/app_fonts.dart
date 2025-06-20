@@ -6,8 +6,8 @@ import 'app_colors.dart';
  * This file contains the text styles used throughout the application.
  * It defines primary font styles, headings, body text, and other text styles
  * using Google Fonts for consistency and design.
- */ //
- 
+ */
+
 class AppFonts {
   static final TextStyle primaryFont = GoogleFonts.roboto();
   static final TextStyle heading1 = GoogleFonts.roboto(

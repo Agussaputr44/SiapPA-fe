@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-/* * 
+/* 
  * Description: Model class for Pengaduan (Complaint) in the application.
  * This class represents a complaint made by a user, including details such as the victim's name,
  */

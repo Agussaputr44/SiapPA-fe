@@ -1,4 +1,4 @@
-/**
+/*
  * UsersModel class represents a user in the system.
  * It contains user details such as id, name, email, phone, profile picture,
  */

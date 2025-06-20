@@ -1,4 +1,10 @@
 
+/* * 
+ * API Configuration
+ * 
+ * This file contains the configuration for the API endpoints used in the application.
+ * It includes base URLs, versioning, and specific endpoints for authentication, uploads, artikels, and pengaduans.
+ */
 class ApiConfig {
   // Base URL and API version
   static const String baseUrl = "https://fancy-quick-lacewing.ngrok-free.app";

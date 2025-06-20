@@ -2,7 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import '../../utils/app_colors.dart';
 
-/* * This file contains the NavBottom widget which implements a bottom navigation bar
+/* This file contains the NavBottom widget which implements a bottom navigation bar
  * using CurvedNavigationBar. It allows users to navigate between different screens
  * in the application.
  */

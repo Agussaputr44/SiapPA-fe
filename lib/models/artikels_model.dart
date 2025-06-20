@@ -1,4 +1,4 @@
-/**
+/* 
  * Model class for Artikel.
  * Represents an article with properties such as id, title, content, photo, and timestamps.
  */

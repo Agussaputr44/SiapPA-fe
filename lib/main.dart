@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/**
+/* SiapPA - Sistem Informasi dan Aplikasi Pengaduan Perempuan dan Anak
  * created by @Agussaputr44
  * @version 1.0.0
  * date 2025-06-20
  * Main entry point for SiapPA application.
  * This file initializes the app and sets up the main widget tree.
- */ ///
+ */
 
 void main() {
   runApp(const Main());
