@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:siappa/views/screens/auth/login_screen.dart';
+import 'package:siappa/views/screens/auth/register_screen.dart';
+
+import 'providers/auth_provider.dart';
+import 'views/screens/splash/splash_screen.dart';
 
 /* SiapPA - Sistem Informasi dan Aplikasi Pengaduan Perempuan dan Anak
  * created by @Agussaputr44
@@ -20,23 +25,24 @@ class Main extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // ChangeNotifierProvider(create: (_) => AuthProviderApp()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
         // ChangeNotifierProvider(create: (_) => PengaduanProvider()),
       ],
       child: MaterialApp(
-        title: 'Panda App',
+        title: 'SiapPA',
         theme: ThemeData(colorSchemeSeed: Colors.transparent),
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
-        // routes: {
-        //   '/': (context) => const SplashScreen(),
+        routes: {
+          '/': (context) => const SplashScreen(),
         //   '/nav': (context) => const NavBottom(),
-        //   '/login': (context) => const LoginPage(),
+          '/login': (context) => const LoginScreen(),
+          '/register': (context) => const RegisterScreen(),
         //   '/home': (context) => const NavBottom(),
         //   '/pengaduan': (context) => const PengaduanPage(),
         //   '/riwayat_pengaduan': (context) => const RiwayatPengaduan(),
         //   '/profile': (context) => const Profile(),
-        // },
+        },
       ),
     );
   }

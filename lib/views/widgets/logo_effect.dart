@@ -45,16 +45,16 @@ class LogoEffectState extends State<LogoEffect>
                   return Transform.rotate(
                     angle: _controller.value * 2 * 3.1416, 
                     child: Container(
-                      width: AppSize.appWidth * 0.22, 
-                      height: AppSize.appHeight * 0.22,
+                      width: AppSize.appWidth * 0.17, 
+                      height: AppSize.appHeight * 0.17,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle, 
                         border: Border.all(
                           color: Colors.white, 
-                          width: 3.0, 
+                          width: 1.0, 
                         ),
                         gradient: const LinearGradient(
-                          colors: [Colors.white, Colors.white70, Colors.pink],
+                          colors: [Colors.white, Colors.white70, Colors.grey],
                           stops: [0.0, 0.5, 1.0],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -65,9 +65,9 @@ class LogoEffectState extends State<LogoEffect>
                 },
               ),
               Image.asset(
-                'assets/img/logo.png',
-                width: AppSize.appWidth * 0.2,
-                height: AppSize.appHeight * 0.2,
+                'assets/images/logo.png',
+                width: AppSize.appWidth * 0.15,
+                height: AppSize.appHeight * 0.15,
               ),
             ],
           ),
