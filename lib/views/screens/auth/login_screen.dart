@@ -1,5 +1,4 @@
-import 'dart:math';
-
+ 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:siappa/utils/app_size.dart';
@@ -167,21 +166,22 @@ class _bottomPortionState extends State<_bottomPortion> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // Proses registrasi di sini
+                    // Handle sign in logic here
+                    Navigator.pushNamed(context, '/dashboard');
                   }
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.pink,
                   minimumSize: Size(AppSize.appWidth * 0.7, 50),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 child: const Text('Sign In'),
               ),
               const SizedBox(height: 10),
               TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.pushNamed(context, '/register'),
                 child: Text(
                   "Do you have any account? Sign Up here",
                   style: GoogleFonts.poppins(color: Colors.black54),
@@ -203,7 +203,7 @@ class _bottomPortionState extends State<_bottomPortion> {
                   foregroundColor: Colors.pink,
                   minimumSize: Size(AppSize.appWidth * 0.7, 50),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),

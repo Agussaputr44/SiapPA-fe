@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:siappa/views/screens/admins/dashboard_screen.dart';
 import 'package:siappa/views/screens/auth/login_screen.dart';
 import 'package:siappa/views/screens/auth/register_screen.dart';
 
@@ -35,7 +36,7 @@ class Main extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => const SplashScreen(),
-        //   '/nav': (context) => const NavBottom(),
+          '/dashboard': (context) => const DashboardScreen(),
           '/login': (context) => const LoginScreen(),
           '/register': (context) => const RegisterScreen(),
         //   '/home': (context) => const NavBottom(),

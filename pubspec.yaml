@@ -73,6 +73,9 @@ flutter:
     - assets/images/wp.png
     - assets/images/logo.png
     - assets/images/google.png
+    - assets/icons/laporan.png
+    - assets/icons/artikel.png
+    - assets/icons/ic_fisik.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

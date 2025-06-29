@@ -214,7 +214,7 @@ class _bottomPortionState extends State<_bottomPortion> {
                   foregroundColor: Colors.pink,
                   minimumSize: Size(AppSize.appWidth * 0.7, 50),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 child: const Text('Sign Up'),
@@ -243,7 +243,7 @@ class _bottomPortionState extends State<_bottomPortion> {
                   foregroundColor: Colors.pink,
                   minimumSize: Size(AppSize.appWidth * 0.7, 50),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
