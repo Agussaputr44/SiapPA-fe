@@ -9,8 +9,8 @@ import 'app_colors.dart';
  */
 
 class AppFonts {
-  static final TextStyle primaryFont = GoogleFonts.roboto();
-  static final TextStyle heading1 = GoogleFonts.roboto(
+  static final TextStyle primaryFont = GoogleFonts.poppins();
+  static final TextStyle heading1 = GoogleFonts.poppins(
     fontSize: 32.0,
     fontWeight: FontWeight.w700,
     letterSpacing: 0.5,
