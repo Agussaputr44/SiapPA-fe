@@ -1,44 +1,66 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../services/auth_service.dart';
 
 /* 
-  * This file contains the AuthProvider class which manages authentication state
- * and provides methods for login, registration, and logout.
+ * This file contains the AuthProvider class which manages authentication state
+ * and provides methods for login with Google, logout, and token management.
  * It uses ChangeNotifier to notify listeners of changes in authentication state.
  */
 class AuthProvider with ChangeNotifier {
   String? _token;
   final AuthService _authService = AuthService();
+  final _storage = FlutterSecureStorage();
 
   String? get token => _token;
+  bool get isAuthenticated => _token != null;
 
-  Future<void> login(String email, String password) async {
-    _token = await _authService.login(email, password);
-    await _saveTokenToStorage(_token!);
-    notifyListeners();
+  AuthProvider() {
+    loadToken();
   }
 
-  Future<void> register(
-      String name, String email, String password, String phone) async {
-    await _authService.register(name, email, password, phone);
+  // login with google provider method
+  Future<void> loginWithGoogle(String idToken) async {
+    try {
+      final token = await _authService.loginWithGoogle(idToken);
+      if (token != null) {
+        _token = token;
+        await _setToken(token);
+        notifyListeners();
+      } else {
+        throw Exception('Login dengan Google gagal: Token tidak diterima');
+      }
+    } catch (e) {
+      throw Exception('Login dengan Google gagal: $e');
+    }
   }
 
   Future<void> logout() async {
-    _token = null;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
-    notifyListeners();
+    try {
+      _token = null;
+      
+      await _storage.delete(key: 'auth_token');
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Gagal logout: $e');
+    }
   }
 
-  Future<void> _saveTokenToStorage(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', token);
+  Future<void> _setToken(String token) async {
+    try {
+      await _storage.write(key: 'auth_token', value: token);
+    } catch (e) {
+      throw Exception('Gagal menyimpan token: $e');
+    }
   }
 
-  Future<void> loadTokenFromStorage() async {
-    final prefs = await SharedPreferences.getInstance();
-    _token = prefs.getString('token');
-    notifyListeners();
+  Future<String?> loadToken() async {
+    try {
+      _token = await _storage.read(key: 'auth_token');
+      notifyListeners();
+      return _token;
+    } catch (e) {
+      throw Exception('Gagal memuat token: $e');
+    }
   }
 }

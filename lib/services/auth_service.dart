@@ -8,6 +8,29 @@ import 'package:siappa/configs/api_config.dart';
  */
 
 class AuthService {
+
+
+  // login with google
+  // This method sends a POST request to the backend with the Google ID token
+  // and returns the authentication token if successful.
+ Future<String> loginWithGoogle(String token) async {
+    final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.google));
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'id_token': token}),
+    );
+
+    if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['token'];
+    } else {
+        final errorData = jsonDecode(response.body);
+        throw Exception('Login dengan Google gagal: ${errorData['error'] ?? response.body}');
+    }
+ }
+
+  /// Login method to authenticate user with email and password.
   Future<String> login(String email, String password) async {
     final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.login));
     final response = await http.post(
@@ -21,6 +44,21 @@ class AuthService {
       return data['token'];
     } else {
       throw Exception('Login gagal: ${response.body}');
+    }
+  }
+
+  Future<void> logout(String token) async {
+    final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.logout));
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Logout gagal: ${response.body}');
     }
   }
 

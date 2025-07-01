@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:siappa/utils/app_colors.dart';
+import '../../../../providers/auth_provider.dart';
+import '../../../../providers/users_provider.dart';
 import 'header_widget.dart';
 import 'card_widget.dart';
 import '../widgets/report_card.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      final usersProvider = Provider.of<UsersProvider>(context, listen: false);
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      usersProvider.loadUserDetails(authProvider);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +46,8 @@ class DashboardScreen extends StatelessWidget {
                         count: '5 Kriteria',
                         additionalCount: 2,
                         iconAsset: 'assets/icons/laporan.png',
-                        onTap: () => Navigator.of(context).pushNamed('/laporan'),
+                        onTap: () =>
+                            Navigator.of(context).pushNamed('/laporan'),
                         background: CardBgType.circleTopLeft,
                         detailColor: const Color(0xFFF48FB1),
                       ),
@@ -39,7 +59,8 @@ class DashboardScreen extends StatelessWidget {
                         count: '10 Artikel',
                         additionalCount: 7,
                         iconAsset: 'assets/icons/artikel.png',
-                        onTap: () => Navigator.of(context).pushNamed('/artikel'),
+                        onTap: () =>
+                            Navigator.of(context).pushNamed('/artikel'),
                         background: CardBgType.circleTopLeft,
                         detailColor: const Color(0xFFF48FB1),
                       ),
@@ -85,7 +106,8 @@ class DashboardScreen extends StatelessWidget {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
               child: SingleChildScrollView(
                 child: Column(
                   children: [

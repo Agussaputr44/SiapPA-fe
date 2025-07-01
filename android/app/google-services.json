@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "37415319442",
+    "project_id": "siappa-464615",
+    "storage_bucket": "siappa-464615.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37415319442:android:0520ca1ec07df9d088334b",
+        "android_client_info": {
+          "package_name": "com.example.siappa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "37415319442-07ljit3rqhhmk4satf71o9s0ca62uqh7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.siappa",
+            "certificate_hash": "33109ab2dcfac4f537b869ae1959702f11fa504c"
+          }
+        },
+        {
+          "client_id": "37415319442-uhsacapd09htp06uimlrv80qu53t9fsc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgdZg-Btd3NoLLb1QVojXRgKzt3tyxV-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "37415319442-uhsacapd09htp06uimlrv80qu53t9fsc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

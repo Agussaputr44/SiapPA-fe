@@ -17,6 +17,7 @@ class ApiConfig {
 
   // === Auth Routes ===
   static const String register = "/auth/register";
+  static const String google = "/auth/google";
   static const String login = "/auth/login";
   static const String logout = "/auth/logout";
   static const String getAllUsers = "/auth/users";

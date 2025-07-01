@@ -1,7 +1,9 @@
- 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:siappa/utils/app_size.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
+import '../../../providers/auth_provider.dart';
+import '../../../utils/app_size.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -37,7 +39,6 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-
 class _bottomPortion extends StatefulWidget {
   const _bottomPortion({Key? key}) : super(key: key);
 
@@ -46,11 +47,13 @@ class _bottomPortion extends StatefulWidget {
 }
 
 class _bottomPortionState extends State<_bottomPortion> {
+
+
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -70,6 +73,66 @@ class _bottomPortionState extends State<_bottomPortion> {
     if (value == null || value.isEmpty) return 'Password tidak boleh kosong';
     if (value.length < 8) return 'Password minimal 8 karakter';
     return null;
+  }
+
+  // // Fungsi untuk login dengan email dan password
+  // Future<void> _handleSignIn(BuildContext context) async {
+  //   if (_formKey.currentState!.validate()) {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+  //     try {
+  //       final authProvider = Provider.of<AuthProvider>(context, listen: false);
+  //       await authProvider.loginWithGoogle(
+  //         _emailController.text.trim(),
+  //         _passwordController.text,
+  //       );
+  //       Navigator.pushReplacementNamed(context, '/dashboard');
+  //     } catch (e) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('Login gagal: $e')),
+  //       );
+  //     } finally {
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //     }
+  //   }
+  // }
+
+  // Fungsi untuk login dengan Google
+  Future<void> _handleGoogleSignIn(BuildContext context) async {
+    print("masuk ke handle google sign in ui");
+    setState(() {
+      _isLoading = true;
+    });
+    final _googleSignIn = GoogleSignIn();
+    try {
+      final googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+      final googleAuth = await googleUser.authentication;
+      final idToken = googleAuth.idToken;
+      if (idToken == null) {
+        throw Exception('Gagal mendapatkan ID Token dari Google');
+      }
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await authProvider.loginWithGoogle(idToken);
+      Navigator.pushReplacementNamed(context, '/dashboard');
+    } catch (e) {
+      print('Error during Google sign-in: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login dengan Google gagal: $e')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -134,7 +197,9 @@ class _bottomPortionState extends State<_bottomPortion> {
                   prefixIcon: const Icon(Icons.lock, color: Colors.white),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                      _obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                       color: Colors.white,
                     ),
                     onPressed: () {
@@ -158,27 +223,29 @@ class _bottomPortionState extends State<_bottomPortion> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
-                  child: const Text('Forgot Password'),
+                  onPressed: () {
+                    // Tambahkan logika untuk "Forgot Password" di sini
+                  },
+                  child: Text(
+                    'Forgot Password',
+                    style: GoogleFonts.poppins(color: Colors.white),
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Handle sign in logic here
-                    Navigator.pushNamed(context, '/dashboard');
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.pink,
-                  minimumSize: Size(AppSize.appWidth * 0.7, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text('Sign In'),
-              ),
+              // ElevatedButton(
+              //   onPressed: _isLoading ? null : () => _handleSignIn(context),
+              //   style: ElevatedButton.styleFrom(
+              //     foregroundColor: Colors.pink,
+              //     minimumSize: Size(AppSize.appWidth * 0.7, 50),
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(10),
+              //     ),
+              //   ),
+              //   child: _isLoading
+              //       ? const CircularProgressIndicator(color: Colors.white)
+              //       : const Text('Sign In'),
+              // ),
               const SizedBox(height: 10),
               TextButton(
                 onPressed: () => Navigator.pushNamed(context, '/register'),
@@ -192,7 +259,8 @@ class _bottomPortionState extends State<_bottomPortion> {
                 child: const Text('Or'),
               ),
               ElevatedButton.icon(
-                onPressed: () {},
+                onPressed:
+                    _isLoading ? null : () => _handleGoogleSignIn(context),
                 icon: Image.asset(
                   'assets/images/google.png',
                   width: 20,
