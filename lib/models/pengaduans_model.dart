@@ -1,18 +1,49 @@
 import 'dart:convert';
 
-/* 
- * Description: Model class for Pengaduan (Complaint) in the application.
- * This class represents a complaint made by a user, including details such as the victim's name,
- */
+/// Model class untuk Pengaduan (Complaint) dalam aplikasi.
+///
+/// Kelas ini merepresentasikan satu aduan yang dibuat oleh pengguna,
+/// mencakup berbagai detail seperti:
+/// - Nama korban
+/// - Alamat korban
+/// - Isi aduan
+/// - Kategori kekerasan
+/// - Harapan/permintaan dari pelapor
+/// - Daftar URL bukti (evidence) yang sudah di-upload
+/// - Daftar path bukti (misal: file lokal sebelum upload)
+///
+/// Fitur utama:
+/// - Konversi dari/ke format JSON untuk kebutuhan serialisasi/deserialisasi data.
+/// - Mendukung pembuatan salinan objek dengan data yang diperbarui melalui metode [copyWith].
+///
+/// Contoh penggunaan:
+/// ```dart
+/// final pengaduan = Pengaduan.fromJson(jsonData);
+/// print(pengaduan.namaKorban);
+/// ```
 class Pengaduan {
+  /// Nama korban yang dilaporkan dalam aduan.
   final String namaKorban;
+
+  /// Alamat korban.
   final String alamat;
+
+  /// Isi aduan yang disampaikan pelapor.
   final String aduan;
+
+  /// Kategori kekerasan (misal: fisik, psikis, seksual).
   final String kategoriKekerasan;
+
+  /// Harapan atau permintaan pelapor terhadap penanganan kasus.
   final String harapan;
+
+  /// Daftar URL bukti yang di-upload (misal: ke server).
   final List<String> evidenceUrls;
+
+  /// Daftar path bukti (misal: path file lokal sebelum di-upload).
   final List<String> evidencePaths;
 
+  /// Membuat instance [Pengaduan] baru.
   Pengaduan({
     required this.namaKorban,
     required this.alamat,
@@ -23,6 +54,9 @@ class Pengaduan {
     required this.evidencePaths,
   });
 
+  /// Membuat objek [Pengaduan] dari map JSON.
+  ///
+  /// Mendukung input berupa list maupun string JSON array pada field evidenceUrls dan evidencePaths.
   factory Pengaduan.fromJson(Map<String, dynamic> json) {
     return Pengaduan(
       namaKorban: json['namaKorban'] ?? '',
@@ -39,6 +73,7 @@ class Pengaduan {
     );
   }
 
+  /// Mengubah objek [Pengaduan] menjadi map JSON.
   Map<String, dynamic> toJson() {
     return {
       'namaKorban': namaKorban,
@@ -51,6 +86,7 @@ class Pengaduan {
     };
   }
 
+  /// Membuat salinan objek [Pengaduan] dengan properti yang dapat diperbarui.
   Pengaduan copyWith({
     String? namaKorban,
     String? alamat,

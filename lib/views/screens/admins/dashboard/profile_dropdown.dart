@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:siappa/providers/users_provider.dart';
+import '../../../../helpers/dialog_helper.dart';
 import '../../../../providers/auth_provider.dart';
+import '../../../widgets/messages_widget.dart';
 import '../../auth/login_screen.dart';
 
 class ProfileDropdown extends StatefulWidget {
@@ -43,7 +45,7 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
             final user = usersProvider.user;
             final name = user?.name ?? 'Memuat...';
             final email = user?.email ?? 'Memuat...';
-            final photoUrl = user?.fotoProfile;
+            // final photoUrl = user?.fotoProfile;
 
             return GestureDetector(
               onTap: _removeDropdown,
@@ -100,28 +102,37 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
                               icon: Icons.logout,
                               title: 'Keluar',
                               onTap: () async {
-                                await authProvider.logout();
-                                if (!mounted) return;
-                                Navigator.of(context).pushAndRemoveUntil(
-                                  PageRouteBuilder(
-                                    pageBuilder: (context, animation,
-                                            secondaryAnimation) =>
-                                        const LoginScreen(),
-                                    transitionsBuilder: (context, animation,
-                                        secondaryAnimation, child) {
-                                      return FadeTransition(
-                                        
-                                        opacity: animation,
-                                        child: child,
-                                      );
-                                    },
-                                  ),
-                                  (route) => false,
+                                final shouldLogout =
+                                    await showCustomConfirmDialog(
+                                  context: context,
+                                  title: 'Logout Confirmation',
+                                  message: 'Are you sure you want to logout?',
+                                  confirmText: 'Logout',
+                                  cancelText: 'Cancel',
+                                  icon: Icons.logout,
+                                  iconColor: Colors.red,
                                 );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Berhasil Keluar')),
-                                );
+                                if (shouldLogout == true) {
+                                  await authProvider.logout();
+                                  if (!mounted) return;
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    PageRouteBuilder(
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          const LoginScreen(),
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        return FadeTransition(
+                                          opacity: animation,
+                                          child: child,
+                                        );
+                                      },
+                                    ),
+                                    (route) => false,
+                                  );
+                                  MessagesWidget.showSuccess(context,
+                                      'Anda telah keluar. Sampai jumpa!');
+                                }
                               },
                               color: Colors.red,
                             ),
@@ -137,7 +148,7 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
         );
       },
     );
-    Overlay.of(context, rootOverlay: true)!.insert(_dropdownOverlay!);
+    Overlay.of(context, rootOverlay: true).insert(_dropdownOverlay!);
   }
 
   void _removeDropdown() {

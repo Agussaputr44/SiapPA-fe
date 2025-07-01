@@ -7,14 +7,27 @@ class UsersProvider with ChangeNotifier {
   final UsersService usersService = UsersService();
   UsersModel? user;
 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   Future<void> loadUserDetails(AuthProvider authProvider) async {
     print("Loading user details...");
     if (authProvider.isAuthenticated) {
-      final token = await authProvider.token;
-      if (token != null) {
-        final userData = await usersService.fetchUserDetail(token);
-        user = UsersModel.fromJson(userData);
-        print("User data loaded: ${user?.email}");
+      _isLoading = true;
+      notifyListeners();
+
+      try {
+        final token = await authProvider.token;
+        if (token != null) {
+          final userData = await usersService.fetchUserDetail(token);
+          user = UsersModel.fromJson(userData);
+          print("User data loaded: ${user?.email}");
+        }
+      } catch (e) {
+        // Optionally handle error
+        print('Error loading user details: $e');
+      } finally {
+        _isLoading = false;
         notifyListeners();
       }
     }

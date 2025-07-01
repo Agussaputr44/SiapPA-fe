@@ -25,8 +25,8 @@ const List<String> years = [
   "2024", "2025", "2026"
 ];
 
-class LaporanScreen extends StatelessWidget {
-  const LaporanScreen({Key? key}) : super(key: key);
+class ReportScreen extends StatelessWidget {
+  const ReportScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

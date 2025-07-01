@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-
 import '../../utils/app_size.dart';
 
 class LogoEffect extends StatefulWidget {
-  const LogoEffect({super.key});
+  final double? logoSize;
+  final double? borderSize;
+
+  const LogoEffect({super.key, this.logoSize, this.borderSize});
 
   @override
   LogoEffectState createState() => LogoEffectState();
@@ -17,19 +19,21 @@ class LogoEffectState extends State<LogoEffect>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 2), 
+      duration: const Duration(seconds: 2),
       vsync: this,
-    )..repeat(); 
+    )..repeat();
   }
 
   @override
   void dispose() {
-    _controller.dispose(); 
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    double logoSize = widget.logoSize ?? AppSize.appWidth * 0.10;
+    double borderSize = widget.borderSize ?? AppSize.appWidth * 0.12;
 
     return Stack(
       children: [
@@ -43,15 +47,15 @@ class LogoEffectState extends State<LogoEffect>
                 animation: _controller,
                 builder: (context, child) {
                   return Transform.rotate(
-                    angle: _controller.value * 2 * 3.1416, 
+                    angle: _controller.value * 2 * 3.1416,
                     child: Container(
-                      width: AppSize.appWidth * 0.17, 
-                      height: AppSize.appHeight * 0.17,
+                      width: borderSize,
+                      height: borderSize,
                       decoration: BoxDecoration(
-                        shape: BoxShape.circle, 
+                        shape: BoxShape.circle,
                         border: Border.all(
-                          color: Colors.white, 
-                          width: 1.0, 
+                          color: Colors.white,
+                          width: 1.0,
                         ),
                         gradient: const LinearGradient(
                           colors: [Colors.white, Colors.white70, Colors.grey],
@@ -66,8 +70,8 @@ class LogoEffectState extends State<LogoEffect>
               ),
               Image.asset(
                 'assets/images/logo.png',
-                width: AppSize.appWidth * 0.15,
-                height: AppSize.appHeight * 0.15,
+                width: logoSize,
+                height: logoSize,
               ),
             ],
           ),
