@@ -46,7 +46,7 @@ class Main extends StatelessWidget {
           '/': (context) => const SplashScreen(),
           '/dashboard': (context) => const DashboardScreen(),
           '/login': (context) => const LoginScreen(),
-          '/register': (context) => const RegisterScreen(),
+          '/register': (context) =>  RegisterScreen(),
           '/laporan': (context) => const ReportScreen(),
           '/artikel': (context) => const ArticleScreen(),
           '/artikel/detail': (context) => const DetailArticleScreen(),

@@ -15,6 +15,14 @@ class AuthProvider with ChangeNotifier {
   /// Get current token (nullable)
   String? get token => _token;
 
+  // pesan sukses
+  String? _successMessage;
+  String? get successMessage => _successMessage;
+
+  // pesan error
+    String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
   /// True if user is authenticated (token is not null)
   bool get isAuthenticated => _token != null;
 
@@ -37,6 +45,27 @@ class AuthProvider with ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  /// register
+  Future<bool> register(String name, String email, String password) async {
+    _isLoading = true;
+    _successMessage = null;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final message = await _authService.register(name, email, password);
+      _successMessage = message; 
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString().replaceFirst('Exception: ', '');
+      _isLoading = false;
+      notifyListeners();
+      return false;
     }
   }
 
