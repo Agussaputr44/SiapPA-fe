@@ -70,21 +70,28 @@ class AuthProvider with ChangeNotifier {
   }
 
   /// Logout and clear token from secure storage
-  Future<void> logout() async {
-    _isLoading = true;
-    notifyListeners();
-    try {
-      _token = null;
-      await _storage.delete(key: 'auth_token');
-      notifyListeners();
-    } catch (e, stack) {
-      debugPrint('Gagal logout: $e\n$stack');
-      throw Exception('Gagal logout: $e');
-    } finally {
-      _isLoading = false;
-      notifyListeners();
+Future<void> logout() async {
+  _isLoading = true;
+  notifyListeners();
+
+  try {
+    if (_token != null) {
+      await _authService.logout(_token!);
+      debugPrint("Logout API call success");
     }
+
+    _token = null;
+    await _storage.delete(key: 'auth_token');
+    notifyListeners();
+  } catch (e, stack) {
+    debugPrint('Gagal logout: $e\n$stack');
+    throw Exception('Gagal logout: $e');
+  } finally {
+    _isLoading = false;
+    notifyListeners();
   }
+}
+
 
   /// Set token in secure storage
   Future<void> _setToken(String token) async {
