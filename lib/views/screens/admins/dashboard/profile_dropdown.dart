@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:siappa/providers/users_provider.dart';
 import '../../../../helpers/dialog_helper.dart';
 import '../../../../providers/auth_provider.dart';
-import '../../../widgets/messages_widget.dart';
 import '../../auth/login_screen.dart';
 
 class ProfileDropdown extends StatefulWidget {
@@ -17,6 +16,9 @@ class ProfileDropdown extends StatefulWidget {
 class _ProfileDropdownState extends State<ProfileDropdown> {
   OverlayEntry? _dropdownOverlay;
   final LayerLink _layerLink = LayerLink();
+
+  // Simpan context parent (utama)
+  late BuildContext _parentContext;
 
   void _toggleDropdown() {
     if (_dropdownOverlay == null) {
@@ -39,13 +41,13 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
         .clamp(16.0, screenWidth - dropdownWidth - 16.0);
 
     _dropdownOverlay = OverlayEntry(
-      builder: (context) {
+      builder: (overlayContext) {
+        // Gunakan overlayContext hanya untuk UI, BUKAN untuk dialog/navigasi!
         return Consumer<UsersProvider>(
           builder: (context, usersProvider, _) {
             final user = usersProvider.user;
             final name = user?.name ?? 'Memuat...';
             final email = user?.email ?? 'Memuat...';
-            // final photoUrl = user?.fotoProfile;
 
             return GestureDetector(
               onTap: _removeDropdown,
@@ -80,31 +82,34 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            // Nama user
                             _buildMenuItem(
                               icon: Icons.person,
                               title: name,
-                              onTap: () {},
+                              onTap: _removeDropdown,
                             ),
-                            // Email user
                             _buildMenuItem(
                               icon: Icons.email,
                               title: email,
-                              onTap: () {},
+                              onTap: _removeDropdown,
                             ),
                             const Divider(height: 1),
                             _buildMenuItem(
                               icon: Icons.settings,
                               title: 'Manage Account',
-                              onTap: () {},
+                              onTap: _removeDropdown,
                             ),
                             _buildMenuItem(
                               icon: Icons.logout,
                               title: 'Keluar',
                               onTap: () async {
-                                final shouldLogout =
-                                    await showCustomConfirmDialog(
-                                  context: context,
+                                // Tutup dropdown dulu
+                                _removeDropdown();
+                                // Tunggu overlay benar-benar hilang
+                                await Future.delayed(const Duration(milliseconds: 100));
+
+                                // GUNAKAN CONTEXT PARENT (_parentContext), BUKAN overlayContext!
+                                final shouldLogout = await showCustomConfirmDialog(
+                                  context: _parentContext,
                                   title: 'Logout Confirmation',
                                   message: 'Are you sure you want to logout?',
                                   confirmText: 'Logout',
@@ -115,23 +120,16 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
                                 if (shouldLogout == true) {
                                   await authProvider.logout();
                                   if (!mounted) return;
-                                  Navigator.of(context).pushAndRemoveUntil(
+                                  Navigator.of(_parentContext).pushAndRemoveUntil(
                                     PageRouteBuilder(
-                                      pageBuilder: (context, animation,
-                                              secondaryAnimation) =>
+                                      pageBuilder: (context, animation, secondaryAnimation) =>
                                           const LoginScreen(),
-                                      transitionsBuilder: (context, animation,
-                                          secondaryAnimation, child) {
-                                        return FadeTransition(
-                                          opacity: animation,
-                                          child: child,
-                                        );
+                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                        return FadeTransition(opacity: animation, child: child);
                                       },
                                     ),
                                     (route) => false,
                                   );
-                                  MessagesWidget.showSuccess(context,
-                                      'Anda telah keluar. Sampai jumpa!');
                                 }
                               },
                               color: Colors.red,
@@ -164,6 +162,8 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
 
   @override
   Widget build(BuildContext context) {
+    // Simpan context utama untuk dipakai di dialog/navigasi
+    _parentContext = context;
     return CompositedTransformTarget(
       link: _layerLink,
       child: GestureDetector(
@@ -176,8 +176,7 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
               radius: 28,
               backgroundImage: (photoUrl != null && photoUrl.isNotEmpty)
                   ? NetworkImage(photoUrl)
-                  : const AssetImage('assets/icons/ic_profile.png')
-                      as ImageProvider,
+                  : const AssetImage('assets/icons/ic_profile.png') as ImageProvider,
             );
           },
         ),
@@ -185,6 +184,7 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
     );
   }
 
+  /// Tidak langsung menutup dropdown, biarkan tiap menu menutup sendiri jika perlu
   Widget _buildMenuItem({
     required IconData icon,
     required String title,
@@ -192,10 +192,7 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
     Color color = Colors.black,
   }) {
     return InkWell(
-      onTap: () {
-        onTap();
-        _removeDropdown();
-      },
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         child: Row(

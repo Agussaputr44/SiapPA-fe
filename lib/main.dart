@@ -21,6 +21,7 @@ import 'views/screens/splash/splash_screen.dart';
 /// Titik masuk utama (main entry point) aplikasi SiapPA.
 /// File ini menginisialisasi aplikasi dan membangun widget tree utama,
 /// serta mengatur dependency provider dan routing utama aplikasi.
+/// 
 void main() {
   runApp(const Main());
 }
