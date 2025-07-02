@@ -42,21 +42,47 @@ class _LoginScreenState extends State<LoginScreen> {
     return null;
   }
 
+  Future<void> _handleLogin() async {
+    final form = _formKey.currentState;
+    if (form == null || !form.validate()) return;
+
+    setState(() => _isLoading = true);
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await authProvider.login(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+
+      if (!mounted) return;
+      MessagesWidget.showSuccess(context, 'Login berhasil!');
+      Navigator.pushReplacementNamed(context, '/dashboard');
+    } catch (e) {
+      if (!mounted) return;
+      MessagesWidget.showError(
+          context, e.toString().replaceFirst('Exception: ', ''));
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   Future<void> _handleGoogleSignIn() async {
     setState(() => _isLoading = true);
     final googleSignIn = GoogleSignIn();
     try {
       final googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
-        // User cancelled the sign-in
         MessagesWidget.showInfo(context, 'Login dibatalkan.');
         setState(() => _isLoading = false);
         return;
       }
+
       final googleAuth = await googleUser.authentication;
       final idToken = googleAuth.idToken;
+
       if (idToken == null) {
-        MessagesWidget.showError(context, 'Gagal mendapatkan ID Token dari Google. Silakan coba lagi.');
+        MessagesWidget.showError(
+            context, 'Gagal mendapatkan ID Token dari Google. Silakan coba lagi.');
         setState(() => _isLoading = false);
         return;
       }
@@ -70,14 +96,13 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       String errorMessage = "Terjadi kesalahan, silakan coba lagi.";
       if (e.toString().contains('sign_in_failed')) {
-        errorMessage = "Login gagal, akun Google tidak valid atau telah dibatalkan.";
+        errorMessage = "Login gagal, akun Google tidak valid atau dibatalkan.";
       } else if (e.toString().contains('network_error')) {
         errorMessage = "Tidak dapat terhubung ke Google, periksa internet Anda.";
       } else if (e.toString().contains('popup_closed_by_user')) {
         errorMessage = "Login dibatalkan oleh pengguna.";
-      } else if (e.toString().contains('Gagal mendapatkan ID Token')) {
-        errorMessage = "Gagal mendapatkan ID Token dari Google, coba lagi.";
       }
+
       if (mounted) {
         MessagesWidget.showError(context, errorMessage);
       }
@@ -88,17 +113,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return LoadingWidget(
       isLoading: _isLoading,
       child: Scaffold(
         body: Stack(
           fit: StackFit.expand,
           children: [
-            Image.asset(
-              'assets/images/wp.png',
-              fit: BoxFit.cover,
-            ),
+            Image.asset('assets/images/wp.png', fit: BoxFit.cover),
             Column(
               children: [
                 const Spacer(),
@@ -116,11 +137,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   emailController: _emailController,
                   passwordController: _passwordController,
                   obscurePassword: _obscurePassword,
-                  onTogglePassword: () => setState(() => _obscurePassword = !_obscurePassword),
+                  onTogglePassword: () =>
+                      setState(() => _obscurePassword = !_obscurePassword),
                   validateEmail: _validateEmail,
                   validatePassword: _validatePassword,
                   isLoading: _isLoading,
                   onGoogleSignIn: _handleGoogleSignIn,
+                  onEmailLogin: _handleLogin, // Pemanggilan fungsi login email
                 ),
               ],
             ),
@@ -141,6 +164,7 @@ class _BottomPortion extends StatelessWidget {
   final String? Function(String?) validatePassword;
   final bool isLoading;
   final VoidCallback onGoogleSignIn;
+  final VoidCallback onEmailLogin;
 
   const _BottomPortion({
     Key? key,
@@ -153,6 +177,7 @@ class _BottomPortion extends StatelessWidget {
     required this.validatePassword,
     required this.isLoading,
     required this.onGoogleSignIn,
+    required this.onEmailLogin,
   }) : super(key: key);
 
   @override
@@ -172,8 +197,6 @@ class _BottomPortion extends StatelessWidget {
         child: Form(
           key: formKey,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 30),
               Text(
@@ -241,7 +264,7 @@ class _BottomPortion extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    // TODO: Tambahkan logika untuk "Forgot Password"
+                    MessagesWidget.showInfo(context, "Fitur Lupa Password Belum Tersedia");
                   },
                   child: Text(
                     'Forgot Password',
@@ -250,19 +273,17 @@ class _BottomPortion extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              // ElevatedButton(
-              //   onPressed: isLoading ? null : () {}, // Tambahkan login email/password jika diperlukan
-              //   style: ElevatedButton.styleFrom(
-              //     foregroundColor: Colors.pink,
-              //     minimumSize: Size(width * 0.7, 50),
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(10),
-              //     ),
-              //   ),
-              //   child: isLoading
-              //       ? const CircularProgressIndicator(color: Colors.white)
-              //       : const Text('Sign In'),
-              // ),
+              ElevatedButton(
+                onPressed: isLoading ? null : onEmailLogin,
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.pink,
+                  minimumSize: Size(AppSize.appWidth * 0.7, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child:  const Text('Sign In'),
+              ),
               const SizedBox(height: 10),
               TextButton(
                 onPressed: () => Navigator.pushNamed(context, '/register'),
@@ -271,10 +292,7 @@ class _BottomPortion extends StatelessWidget {
                   style: GoogleFonts.poppins(color: Colors.black54),
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 5.0),
-                child: const Text('Or'),
-              ),
+              const Text('Or'),
               ElevatedButton.icon(
                 onPressed: isLoading ? null : onGoogleSignIn,
                 icon: Image.asset(
@@ -285,7 +303,7 @@ class _BottomPortion extends StatelessWidget {
                 label: const Text('Sign in with Google'),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.pink,
-                  minimumSize: Size(width * 0.7, 50),
+                  minimumSize: Size(AppSize.appWidth, 50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

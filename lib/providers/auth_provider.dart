@@ -20,7 +20,7 @@ class AuthProvider with ChangeNotifier {
   String? get successMessage => _successMessage;
 
   // pesan error
-    String? _errorMessage;
+  String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
   /// True if user is authenticated (token is not null)
@@ -47,6 +47,22 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+  Future<void> login(String email, String password) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      final token = await _authService.login(email, password);
+      _token = token;
+      await _setToken(token);
+      notifyListeners();
+    } catch (e, stack) {
+      debugPrint('Login gagal: $e\n$stack');
+      throw Exception('Login gagal: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 
   /// register
   Future<bool> register(String name, String email, String password) async {
@@ -57,7 +73,7 @@ class AuthProvider with ChangeNotifier {
 
     try {
       final message = await _authService.register(name, email, password);
-      _successMessage = message; 
+      _successMessage = message;
       _isLoading = false;
       notifyListeners();
       return true;
@@ -70,28 +86,27 @@ class AuthProvider with ChangeNotifier {
   }
 
   /// Logout and clear token from secure storage
-Future<void> logout() async {
-  _isLoading = true;
-  notifyListeners();
+  Future<void> logout() async {
+    _isLoading = true;
+    notifyListeners();
 
-  try {
-    if (_token != null) {
-      await _authService.logout(_token!);
-      debugPrint("Logout API call success");
+    try {
+      if (_token != null) {
+        await _authService.logout(_token!);
+        debugPrint("Logout API call success");
+      }
+
+      _token = null;
+      await _storage.delete(key: 'auth_token');
+      notifyListeners();
+    } catch (e, stack) {
+      debugPrint('Gagal logout: $e\n$stack');
+      throw Exception('Gagal logout: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    _token = null;
-    await _storage.delete(key: 'auth_token');
-    notifyListeners();
-  } catch (e, stack) {
-    debugPrint('Gagal logout: $e\n$stack');
-    throw Exception('Gagal logout: $e');
-  } finally {
-    _isLoading = false;
-    notifyListeners();
   }
-}
-
 
   /// Set token in secure storage
   Future<void> _setToken(String token) async {

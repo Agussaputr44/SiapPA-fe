@@ -73,31 +73,31 @@ class AuthService {
 
   /// Login with email and password.
   /// Returns backend auth token if successful.
-  // Future<String> login(String email, String password) async {
-  //   final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.login));
-  //   final response = await http.post(
-  //     url,
-  //     headers: _jsonHeaders,
-  //     body: jsonEncode({'email': email, 'password': password}),
-  //   );
+  Future<String> login(String email, String password) async {
+    final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.login));
+    final response = await http.post(
+      url,
+      headers: _jsonHeaders,
+      body: jsonEncode({'email': email, 'password': password}),
+    );
 
-  //   if (response.statusCode == 200) {
-  //     final data = jsonDecode(response.body);
-  //     if (data['token'] == null) {
-  //       throw Exception('Login gagal: Token tidak ditemukan');
-  //     }
-  //     return data['token'];
-  //   } else {
-  //     String message = 'Login gagal';
-  //     try {
-  //       final errorData = jsonDecode(response.body);
-  //       message += ': ${errorData['error'] ?? response.body}';
-  //     } catch (_) {
-  //       message += ': ${response.body}';
-  //     }
-  //     throw Exception(message);
-  //   }
-  // }
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['token'] == null) {
+        throw Exception('Login gagal: Token tidak ditemukan');
+      }
+      return data['token'];
+    } else {
+      String message = 'Login gagal';
+      try {
+        final errorData = jsonDecode(response.body);
+        message += ': ${errorData['error'] ?? response.body}';
+      } catch (_) {
+        message += ': ${response.body}';
+      }
+      throw Exception(message);
+    }
+  }
 
   /// Logout by invalidating token on backend.
   Future<void> logout(String token) async {
