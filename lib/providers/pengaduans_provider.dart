@@ -14,7 +14,6 @@ class PengaduansProvider with ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<void> loadAllPengaduans(AuthProvider authProvider) async {
-    print("loadAllPengaduans() called");
     if (authProvider.isAuthenticated) {
       _isLoading = true;
       _errorMessage = null;
@@ -24,18 +23,14 @@ class PengaduansProvider with ChangeNotifier {
         final token = authProvider.token;
         if (token != null) {
           final response = await pengaduansService.fetchAllPengaduans(token);
-          print("Raw response: $response");
 
           pengaduans = response.map((json) {
-            print('json item: $json');
             return PengaduansModel.fromJson(json);
           }).toList();
 
-          print('Parsed pengaduans: $pengaduans');
         }
       } catch (e) {
         _errorMessage = "Terjadi kesalahan saat memuat data: $e";
-        print(_errorMessage);
       } finally {
         _isLoading = false;
         notifyListeners();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ReportCard extends StatelessWidget {
   final String imageAsset;
@@ -84,7 +85,7 @@ class ReportCard extends StatelessWidget {
                     children: [
                       Text(
                         isTitleUppercase ? title : _capitalizeFirst(title),
-                        style: const TextStyle(
+                        style:  GoogleFonts.poppins(
                           fontWeight: FontWeight.bold,
                           fontSize: 19,
                           color: Colors.black,
@@ -92,7 +93,7 @@ class ReportCard extends StatelessWidget {
                       ),
                       Text(
                         subtitle,
-                        style: const TextStyle(
+                        style:  GoogleFonts.poppins(
                           fontWeight: FontWeight.normal,
                           fontSize: 14,
                           color: Colors.grey,
@@ -122,7 +123,7 @@ class ReportCard extends StatelessWidget {
                    
                     child: Text(
                       '+$additionalCount',
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: color,
@@ -147,7 +148,7 @@ class ReportCard extends StatelessWidget {
                 ),
                 child: Text(
                   'Rincian',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     color: color,
                     fontWeight: FontWeight.w500,
                     fontSize: 16,

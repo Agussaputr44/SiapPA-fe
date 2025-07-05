@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../utils/app_size.dart';
+
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String subtitle;
@@ -20,6 +22,11 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = AppSize.appWidth;
+
+    double titleFontSize = screenWidth * 0.06;  
+    double subtitleFontSize = screenWidth * 0.035; 
+
     return SafeArea(
       bottom: false,
       child: Container(
@@ -54,22 +61,19 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                   children: [
                     Text(
                       title,
-                        overflow: TextOverflow.ellipsis,
-
+                      overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.poppins(
-                        fontSize: 24,
+                        fontSize: titleFontSize.clamp(18, 26),
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
-                        
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                        overflow: TextOverflow.ellipsis,
-
+                      overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.poppins(
-                        fontSize: 13,
+                        fontSize: subtitleFontSize.clamp(11, 16),
                         color: Colors.grey,
                         fontWeight: FontWeight.w400,
                       ),

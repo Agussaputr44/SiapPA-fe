@@ -131,7 +131,7 @@ class CardWidget extends StatelessWidget {
                         
                           child: Text(
                             '+$additionalCount',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: detailColor,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:siappa/providers/users_provider.dart';
+import '../../../../utils/app_size.dart';
 import 'profile_dropdown.dart';
 
 class HeaderWidget extends StatelessWidget {
@@ -9,8 +10,18 @@ class HeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = AppSize.appWidth;
+
+    // Tentukan fontSize berdasarkan lebar layar
+    double greetingFontSize = screenWidth * 0.06;   // ~24 pada 400px
+    double subtitleFontSize = screenWidth * 0.08;   // ~33 pada 400px
+
     return Padding(
-      padding: const EdgeInsets.only(top: 50, right: 20.0, left: 20.0),
+      padding: EdgeInsets.only(
+        top: screenWidth * 0.05, 
+        right: screenWidth * 0.02,
+        left: screenWidth * 0.02,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -19,14 +30,14 @@ class HeaderWidget extends StatelessWidget {
             child: Consumer<UsersProvider>(
               builder: (context, usersProvider, child) {
                 final user = usersProvider.user;
-                final userName = user?.name ?? "User";
+                final userName = user?.name ?? "Admin";
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     RichText(
                       text: TextSpan(
                         style: GoogleFonts.poppins(
-                          fontSize: 24,
+                          fontSize: greetingFontSize.clamp(10, 21),
                           fontWeight: FontWeight.w400,
                           color: Colors.black,
                         ),
@@ -34,16 +45,20 @@ class HeaderWidget extends StatelessWidget {
                           const TextSpan(text: "Hello "),
                           TextSpan(
                             text: userName,
-                            style: GoogleFonts.poppins(color: Colors.pink[400]),
+                            style: GoogleFonts.poppins(
+                              color: Colors.pink[400],
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),
                     ),
+                    const SizedBox(height: 2),
                     Text(
                       "Kepedulian Yang utama",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600,
-                        fontSize: 33,
+                        fontSize: subtitleFontSize.clamp(15, 30),
                         color: Colors.grey[500],
                       ),
                     ),

@@ -19,6 +19,7 @@
 /// if (result == true) { ... }
 /// ```
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomConfirmDialog extends StatelessWidget {
   /// Judul dialog.
@@ -71,7 +72,7 @@ class CustomConfirmDialog extends StatelessWidget {
           Expanded(
               child: Text(
             title,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style:  GoogleFonts.poppins(fontWeight: FontWeight.bold),
           )),
         ],
       ),

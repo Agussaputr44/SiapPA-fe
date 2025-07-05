@@ -40,7 +40,6 @@ class AuthProvider with ChangeNotifier {
       await _setToken(token);
       notifyListeners();
     } catch (e, stack) {
-      debugPrint('Login dengan Google gagal: $e\n$stack');
       throw Exception('Login dengan Google gagal: $e');
     } finally {
       _isLoading = false;
@@ -56,7 +55,6 @@ class AuthProvider with ChangeNotifier {
       await _setToken(token);
       notifyListeners();
     } catch (e, stack) {
-      debugPrint('Login gagal: $e\n$stack');
       throw Exception('Login gagal: $e');
     } finally {
       _isLoading = false;
@@ -93,14 +91,12 @@ class AuthProvider with ChangeNotifier {
     try {
       if (_token != null) {
         await _authService.logout(_token!);
-        debugPrint("Logout API call success");
       }
 
       _token = null;
       await _storage.delete(key: 'auth_token');
       notifyListeners();
     } catch (e, stack) {
-      debugPrint('Gagal logout: $e\n$stack');
       throw Exception('Gagal logout: $e');
     } finally {
       _isLoading = false;
@@ -113,7 +109,6 @@ class AuthProvider with ChangeNotifier {
     try {
       await _storage.write(key: 'auth_token', value: token);
     } catch (e, stack) {
-      debugPrint('Gagal menyimpan token: $e\n$stack');
       throw Exception('Gagal menyimpan token: $e');
     }
   }
@@ -125,7 +120,6 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
       return _token;
     } catch (e, stack) {
-      debugPrint('Gagal memuat token: $e\n$stack');
       throw Exception('Gagal memuat token: $e');
     }
   }
@@ -139,7 +133,6 @@ class AuthProvider with ChangeNotifier {
       _token = null;
       notifyListeners();
     } catch (e, stack) {
-      debugPrint('Gagal clear secure storage: $e\n$stack');
       throw Exception('Gagal clear secure storage: $e');
     } finally {
       _isLoading = false;

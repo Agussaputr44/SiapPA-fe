@@ -9,21 +9,40 @@ class UsersService {
     final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.getUserProfile));
     final response = await http.get(
       url,
-      headers: {'Content-Type': 'application/json'
-      , 'Authorization': 'Bearer $token'},
-      
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
     );
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return data['user']; 
+      return data['user'];
     } else {
       final errorData = jsonDecode(response.body);
       throw Exception(
-        'Gagal memuat data: ${errorData['error'] ?? response.body}'
-      );
+          'Gagal memuat data: ${errorData['error'] ?? response.body}');
     }
   }
 
-  
+  Future<List<dynamic>> fetchAllUsers(String? token) async {
+    final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.getAllUsers));
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['data']; 
+    } else {
+      final errorData = jsonDecode(response.body);
+      throw Exception(
+        'Gagal memuat data: ${errorData['error'] ?? response.body}',
+      );
+    }
+  }
 }

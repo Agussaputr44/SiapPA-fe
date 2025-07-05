@@ -31,6 +31,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Provider.of<PengaduansProvider>(context, listen: false);
 
       usersProvider.loadUserDetails(authProvider);
+      usersProvider.loadAllUsers(authProvider);
       pengaduansProvider.loadAllPengaduans(authProvider);
     });
   }
@@ -45,6 +46,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final isLoading = context.watch<UsersProvider>().isLoading;
     final pengaduans = context.watch<PengaduansProvider>().pengaduans;
     final articles = context.watch<ArticlesProvider>().articles;
+    final users = context.watch<UsersProvider>().allUsers;
 
     return WillPopScope(
       onWillPop: () async {
@@ -100,7 +102,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     const SizedBox(height: 16),
                     CardWidget(
                       title: 'Pengguna',
-                      count: '10 Akun',
+                      count: '${users.length} Pengguna',
                       iconAsset: 'assets/icons/artikel.png',
                       onTap: () {},
                       isWide: true,

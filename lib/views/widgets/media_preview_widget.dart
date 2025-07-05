@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 
 class MediaPreviewWidget extends StatefulWidget {
@@ -44,7 +45,7 @@ class _MediaPreviewWidgetState extends State<MediaPreviewWidget> {
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           _isVideo ? 'Preview Video' : 'Preview Gambar',
-          style: const TextStyle(color: Colors.white),
+          style: GoogleFonts.poppins(color: Colors.white),
         ),
       ),
       body: Center(
