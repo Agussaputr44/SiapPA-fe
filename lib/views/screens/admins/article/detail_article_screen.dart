@@ -24,7 +24,7 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
 
-    final url = ApiConfig.baseUrl;
+    const url = ApiConfig.baseUrl;
     imageUrl = '$url${args['imageUrl'] ?? ''}';
     final fileExtension = imageUrl.split('.').last.toLowerCase();
 

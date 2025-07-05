@@ -66,7 +66,9 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
       await articleProvider.addArticle(judul: judul, isi: isi, foto: fotoUrl);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(articleProvider.successMessage ?? 'Artikel berhasil ditambahkan')),
+        SnackBar(
+            content: Text(articleProvider.successMessage ??
+                'Artikel berhasil ditambahkan')),
       );
 
       Navigator.of(context).pop();
@@ -81,6 +83,14 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
         ),
       );
     }
+  }
+
+  bool _isImage(File file) {
+    final path = file.path.toLowerCase();
+    return path.endsWith('.jpg') ||
+        path.endsWith('.jpeg') ||
+        path.endsWith('.png') ||
+        path.endsWith('.gif');
   }
 
   @override
@@ -167,12 +177,63 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                           const SizedBox(height: 18),
                           Center(
                             child: _selectedFile != null
-                                ? Text(
-                                    _selectedFile!.path.split('/').last,
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.black54,
-                                      fontSize: 14,
-                                    ),
+                                ? Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: _isImage(_selectedFile!)
+                                            ? Image.file(
+                                                _selectedFile!,
+                                                width: 160,
+                                                height: 160,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Container(
+                                                width: 160,
+                                                height: 160,
+                                                color: Colors.grey[200],
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(Icons.videocam,
+                                                        size: 40,
+                                                        color:
+                                                            Colors.grey[700]),
+                                                    const SizedBox(height: 6),
+                                                    Text(
+                                                      'Video',
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                        fontSize: 12,
+                                                        color: Colors.grey[700],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                      ),
+                                      Positioned(
+                                        top: 4,
+                                        right: 4,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              _selectedFile = null;
+                                            });
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(4),
+                                            decoration: const BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.redAccent,
+                                            ),
+                                            child: const Icon(Icons.close,
+                                                size: 16, color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   )
                                 : Icon(
                                     Icons.cloud_upload_rounded,
@@ -187,8 +248,10 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
                               height: 36,
                               child: ElevatedButton.icon(
                                 onPressed: _pickFile,
-                                icon: const Icon(Icons.insert_drive_file_rounded,
-                                    size: 20, color: Colors.white70),
+                                icon: const Icon(
+                                    Icons.insert_drive_file_rounded,
+                                    size: 20,
+                                    color: Colors.white70),
                                 label: Text(
                                   'Pilih',
                                   style: GoogleFonts.poppins(
