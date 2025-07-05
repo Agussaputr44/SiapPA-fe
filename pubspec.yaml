@@ -43,6 +43,7 @@ dependencies:
   file_picker: ^8.1.2
   flutter_secure_storage: ^9.2.4
   google_sign_in: ^6.2.2
+  mime: ^2.0.0
 
 
 
@@ -77,6 +78,10 @@ flutter:
     - assets/icons/artikel.png
     - assets/icons/ic_fisik.png
     - assets/icons/ic_profile.png
+    - assets/icons/ic_psikis.png
+    - assets/icons/ic_seksual.png
+    - assets/icons/ic_ekonomi.png
+    - assets/icons/ic_sosial.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

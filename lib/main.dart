@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:siappa/providers/articles_provider.dart';
 import 'package:siappa/providers/filters_provider.dart';
 import 'package:siappa/providers/users_provider.dart';
 import 'package:siappa/views/screens/admins/article/add_article_screen.dart';
@@ -17,11 +18,11 @@ import 'views/screens/splash/splash_screen.dart';
 /// created by @Agussaputr44
 /// @version 1.0.0
 /// date 2025-06-20
-/// 
+///
 /// Titik masuk utama (main entry point) aplikasi SiapPA.
 /// File ini menginisialisasi aplikasi dan membangun widget tree utama,
 /// serta mengatur dependency provider dan routing utama aplikasi.
-/// 
+///
 void main() {
   runApp(const Main());
 }
@@ -36,6 +37,7 @@ class Main extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => FiltersProvider()),
         ChangeNotifierProvider(create: (_) => UsersProvider()),
+        ChangeNotifierProvider(create: (_) => ArticlesProvider()),
       ],
       child: MaterialApp(
         title: 'SiapPA',
@@ -46,7 +48,7 @@ class Main extends StatelessWidget {
           '/': (context) => const SplashScreen(),
           '/dashboard': (context) => const DashboardScreen(),
           '/login': (context) => const LoginScreen(),
-          '/register': (context) =>  RegisterScreen(),
+          '/register': (context) => RegisterScreen(),
           '/laporan': (context) => const ReportScreen(),
           '/artikel': (context) => const ArticleScreen(),
           '/artikel/detail': (context) => const DetailArticleScreen(),

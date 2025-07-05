@@ -3,20 +3,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:siappa/views/screens/admins/widgets/app_bar_widget.dart';
 
 class DetailArticleScreen extends StatelessWidget {
-  final String title;
-  final String imageUrl;
-  final String content;
+  const DetailArticleScreen({super.key, this.onEdit});
+
   final VoidCallback? onEdit;
 
-   const DetailArticleScreen({
-    super.key,
-    this.title = 'Judul Default',
-    this.imageUrl = '',
-    this.content = 'Konten default',
-    this.onEdit,
-  });
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+
+    final String title = args['title'] ?? 'Judul Default';
+    final String imageUrl = args['imageUrl'] ?? '';
+    final String content = args['content'] ?? 'Konten default';
     return Scaffold(
       appBar: const AppBarWidget(
         title: 'Rincian Artikel',

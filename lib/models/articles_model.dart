@@ -18,7 +18,7 @@
 /// final artikel = Artikel.fromJson(jsonData);
 /// print(artikel.judul);
 /// ```
-class Artikel {
+class ArticlesModel {
   /// ID unik artikel (opsional).
   final int? id;
 
@@ -38,7 +38,7 @@ class Artikel {
   final DateTime? updatedAt;
 
   /// Membuat instance [Artikel] baru.
-  Artikel({
+  ArticlesModel({
     this.id,
     required this.judul,
     required this.isi,
@@ -48,8 +48,8 @@ class Artikel {
   });
 
   /// Membuat objek [Artikel] dari map JSON.
-  factory Artikel.fromJson(Map<String, dynamic> json) {
-    return Artikel(
+  factory ArticlesModel.fromJson(Map<String, dynamic> json) {
+    return ArticlesModel(
       id: json['id'],
       judul: json['judul'] ?? '',
       isi: json['isi'] ?? '',
@@ -64,7 +64,7 @@ class Artikel {
   }
 
   /// Membuat salinan objek [Artikel] dengan properti yang dapat diperbarui.
-  Artikel copyWith({
+  ArticlesModel copyWith({
     int? id,
     String? judul,
     String? isi,
@@ -72,7 +72,7 @@ class Artikel {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
-    return Artikel(
+    return ArticlesModel(
       id: id ?? this.id,
       judul: judul ?? this.judul,
       isi: isi ?? this.isi,

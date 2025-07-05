@@ -54,15 +54,20 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                   children: [
                     Text(
                       title,
+                        overflow: TextOverflow.ellipsis,
+
                       style: GoogleFonts.poppins(
                         fontSize: 24,
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
+                        
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
+                        overflow: TextOverflow.ellipsis,
+
                       style: GoogleFonts.poppins(
                         fontSize: 13,
                         color: Colors.grey,
