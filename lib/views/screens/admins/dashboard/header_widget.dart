@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:siappa/providers/users_provider.dart';
-import '../../../../utils/app_size.dart';
+import 'package:siappa/utils/app_size.dart';
 import 'profile_dropdown.dart';
 
 class HeaderWidget extends StatelessWidget {
@@ -29,22 +29,22 @@ class HeaderWidget extends StatelessWidget {
           Expanded(
             child: Consumer<UsersProvider>(
               builder: (context, usersProvider, child) {
-                final user = usersProvider.user;
-                final userName = user?.name ?? "Admin";
+                // final user = usersProvider.user;
+                // final userName = user?.name ?? "Admin";
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     RichText(
                       text: TextSpan(
                         style: GoogleFonts.poppins(
-                          fontSize: greetingFontSize.clamp(10, 21),
+                          fontSize: greetingFontSize.clamp(15, 22),
                           fontWeight: FontWeight.w400,
                           color: Colors.black,
                         ),
                         children: [
-                          const TextSpan(text: "Hello "),
+                          const TextSpan(text: "Hello, "),
                           TextSpan(
-                            text: userName,
+                            text: "Admin",
                             style: GoogleFonts.poppins(
                               color: Colors.pink[400],
                               fontWeight: FontWeight.w500,
@@ -53,12 +53,12 @@ class HeaderWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     Text(
                       "Kepedulian Yang utama",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w600,
-                        fontSize: subtitleFontSize.clamp(15, 30),
+                        fontSize: subtitleFontSize.clamp(22, 28),
                         color: Colors.grey[500],
                       ),
                     ),

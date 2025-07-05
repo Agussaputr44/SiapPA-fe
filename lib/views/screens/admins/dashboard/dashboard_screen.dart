@@ -104,7 +104,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       title: 'Pengguna',
                       count: '${users.length} Pengguna',
                       iconAsset: 'assets/icons/artikel.png',
-                      onTap: () {},
+                      onTap: () => Navigator.of(context).pushNamed('/users'),
                       isWide: true,
                       background: CardBgType.circleLeft,
                       detailColor: const Color(0xFFF48FB1),

@@ -10,6 +10,7 @@ import 'package:siappa/views/screens/admins/article/detail_article_screen.dart';
 import 'package:siappa/views/screens/admins/article/article_screen.dart';
 import 'package:siappa/views/screens/admins/dashboard/dashboard_screen.dart';
 import 'package:siappa/views/screens/admins/pengaduans/pengaduans_screen.dart';
+import 'package:siappa/views/screens/admins/users/users_screen.dart';
 import 'package:siappa/views/screens/auth/login_screen.dart';
 import 'package:siappa/views/screens/auth/register_screen.dart';
 
@@ -54,6 +55,7 @@ class Main extends StatelessWidget {
           '/login': (context) => const LoginScreen(),
           '/register': (context) => RegisterScreen(),
           '/laporan': (context) => const PengaduansScreen(),
+          '/users': (context) => const UsersScreen(),
           '/artikel': (context) => const ArticleScreen(),
           '/artikel/detail': (context) => const DetailArticleScreen(),
           '/artikel/add': (context) => const AddArticleScreen(),
