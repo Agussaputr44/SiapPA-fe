@@ -43,55 +43,62 @@ class _ArticleScreenState extends State<ArticleScreen> {
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: articlesProvider.articles.isEmpty
-                  ? const Center(child: Text("Tidak ada data artikel."))
-                  : SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          FilterWidget(
-                            categories: categories,
-                            selectedCategory: filter.category,
-                            months: months,
-                            selectedMonth: filter.month,
-                            years: years,
-                            selectedYear: filter.year,
-                            onCategoryChanged:
-                                context.read<FiltersProvider>().setCategory,
-                            onMonthChanged:
-                                context.read<FiltersProvider>().setMonth,
-                            onYearChanged:
-                                context.read<FiltersProvider>().setYear,
-                          ),
-                          const SizedBox(height: 10),
-                          // Render artikel dari provider
-                          ...articlesProvider.articles.map((artikel) {
-                            return ArticleCardWidget(
-                              title: artikel.judul,
-                              // Tambahkan kategori kalau ada di model
-                              date: artikel.createdAt?.toIso8601String() ??
-                                  'Tanggal tidak tersedia',
-                              onDetail: () {
-                                print(
-                                    'Push to detail with: ${artikel.judul}, ${artikel.foto}, ${artikel.isi}');
-
-                                Navigator.of(context)
-                                    .pushNamed('/artikel/detail', arguments: {
-                                  'title': artikel.judul,
-                                  'imageUrl': artikel.foto ?? '',
-                                  'content': artikel.isi,
-                                });
-                              },
-                              bgCircleColor: const Color(0xFFF48FB1),
-                              bgCircleShadow:
-                                  const Color(0xFFF48FB1).withOpacity(0.2),
-                            );
-                          }).toList(),
-                        ],
+              ? const Center(child: Text("Tidak ada data artikel."))
+              : SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      FilterWidget(
+                        categories: categories,
+                        selectedCategory: filter.category,
+                        months: months,
+                        selectedMonth: filter.month,
+                        years: years,
+                        selectedYear: filter.year,
+                        onCategoryChanged:
+                            context.read<FiltersProvider>().setCategory,
+                        onMonthChanged:
+                            context.read<FiltersProvider>().setMonth,
+                        onYearChanged: context.read<FiltersProvider>().setYear,
                       ),
-                    ),
+                      const SizedBox(height: 10),
+                      // Render artikel dari provider
+                      ...articlesProvider.articles.map((artikel) {
+                        return ArticleCardWidget(
+                          title: artikel.judul,
+                          // Tambahkan kategori kalau ada di model
+                          date: artikel.createdAt?.toIso8601String() ??
+                              'Tanggal tidak tersedia',
+                          onDetail: () {
+                            print(
+                                'Push to detail with: ${artikel.judul}, ${artikel.foto}, ${artikel.isi}');
+
+                            Navigator.of(context)
+                                .pushNamed('/artikel/detail', arguments: {
+                              'title': artikel.judul,
+                              'imageUrl': artikel.foto ?? '',
+                              'content': artikel.isi,
+                            });
+                          },
+                          bgCircleColor: const Color(0xFFF48FB1),
+                          bgCircleShadow:
+                              const Color(0xFFF48FB1).withOpacity(0.2),
+                        );
+                      }).toList(),
+                    ],
+                  ),
+                ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed('/artikel/add');
+          onPressed: () async {
+            final result =
+                await Navigator.of(context).pushNamed('/artikel/add');
+
+            if (result == true) {
+              final authProvider = context.read<AuthProvider>();
+              await context
+                  .read<ArticlesProvider>()
+                  .loadAllArticles(authProvider);
+            }
           },
           child: const Icon(Icons.add),
           backgroundColor: const Color(0xFFF48FB1),

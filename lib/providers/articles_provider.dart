@@ -5,10 +5,10 @@ import 'package:siappa/services/articles_service.dart';
 import '../models/articles_model.dart';
 
 class ArticlesProvider with ChangeNotifier {
+
   final ArticlesService _articlesService = ArticlesService();
   List<ArticlesModel> articles = [];
-    AuthProvider authProvider = AuthProvider();
-
+  AuthProvider authProvider = AuthProvider();
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -25,16 +25,13 @@ class ArticlesProvider with ChangeNotifier {
       notifyListeners();
 
       try {
-        final token = await authProvider.token;
+        final token = authProvider.token;
         if (token != null) {
           final response = await _articlesService.fetchAllArticles(token);
-
-          // Ubah list dynamic menjadi List<ArticlesModel>
           articles =
               response.map((json) => ArticlesModel.fromJson(json)).toList();
         }
       } catch (e) {
-        print('Error loading artikels: $e');
       } finally {
         _isLoading = false;
         notifyListeners();
@@ -52,13 +49,11 @@ class ArticlesProvider with ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
 
-
     try {
-      
-
       final token = await authProvider.token;
 
-      final message = await _articlesService.addArticle(token ,judul, isi, foto);
+      final message =
+          await _articlesService.addArticle(token, judul, isi, foto);
       _successMessage = message;
     } catch (e) {
       _errorMessage = e.toString();
