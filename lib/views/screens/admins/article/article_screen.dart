@@ -68,17 +68,23 @@ class _ArticleScreenState extends State<ArticleScreen> {
                           // Tambahkan kategori kalau ada di model
                           date: artikel.createdAt?.toIso8601String() ??
                               'Tanggal tidak tersedia',
-                          onDetail: () {
-                            print(
-                                'Push to detail with: ${artikel.judul}, ${artikel.foto}, ${artikel.isi}');
-
-                            Navigator.of(context)
+                          onDetail: () async {
+                            final result = await Navigator.of(context)
                                 .pushNamed('/artikel/detail', arguments: {
+                              'id': artikel.id,
                               'title': artikel.judul,
                               'imageUrl': artikel.foto ?? '',
                               'content': artikel.isi,
                             });
+
+                            if (result == true) {
+                              final authProvider = context.read<AuthProvider>();
+                              await context
+                                  .read<ArticlesProvider>()
+                                  .loadAllArticles(authProvider);
+                            }
                           },
+
                           bgCircleColor: const Color(0xFFF48FB1),
                           bgCircleShadow:
                               const Color(0xFFF48FB1).withOpacity(0.2),

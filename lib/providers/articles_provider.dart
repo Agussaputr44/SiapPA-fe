@@ -5,7 +5,6 @@ import 'package:siappa/services/articles_service.dart';
 import '../models/articles_model.dart';
 
 class ArticlesProvider with ChangeNotifier {
-
   final ArticlesService _articlesService = ArticlesService();
   List<ArticlesModel> articles = [];
   AuthProvider authProvider = AuthProvider();
@@ -68,4 +67,23 @@ class ArticlesProvider with ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
   }
+
+Future<void> deleteArticle(int id) async {
+  _isLoading = true;
+  _successMessage = null;
+  _errorMessage = null;
+  notifyListeners();
+
+  try {
+    final token = await authProvider.token;
+    final message = await _articlesService.deleteArticle(token, id);
+    _successMessage = message;
+  } catch (e) {
+    _errorMessage = e.toString();
+  } finally {
+    _isLoading = false;
+    notifyListeners();
+  }
+}
+
 }

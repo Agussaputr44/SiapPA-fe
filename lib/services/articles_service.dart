@@ -58,4 +58,21 @@ class ArticlesService {
       throw Exception(message);
     }
   }
+
+  Future<String> deleteArticle(String? token, int id) async {
+    final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.artikelDelete(id)));
+    final response = await http.delete(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['message'] ?? 'Berhasil dihapus';
+    } else {
+      throw Exception('Gagal menghapus artikel: ${response.reasonPhrase}');
+    }
+  }
 }

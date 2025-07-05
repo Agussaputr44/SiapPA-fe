@@ -58,7 +58,12 @@ class ApiConfig {
   static const String articles = "/artikels";
 
   /// Endpoint detail artikel berdasarkan [id].
-  static String artikelDetail(String id) => "/artikels/$id";
+  static String artikelDetail(int id) => "/artikels/$id";
+
+
+  static String artikelDelete(int id) => "/artikels/$id";
+
+
 
   // === Endpoint Pengaduan ===
 

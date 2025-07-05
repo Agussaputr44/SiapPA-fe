@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:siappa/configs/api_config.dart';
+import 'package:siappa/providers/articles_provider.dart';
 import 'package:siappa/views/screens/admins/widgets/app_bar_widget.dart';
 import 'package:siappa/views/widgets/media_preview_widget.dart';
+import 'package:siappa/views/widgets/messages_widget.dart';
 import 'package:video_player/video_player.dart';
+
+import '../../../widgets/confirm_dialog_widget.dart';
 
 class DetailArticleScreen extends StatefulWidget {
   const DetailArticleScreen({super.key, this.onEdit});
@@ -127,35 +132,74 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                                   ),
                                 );
                               },
-                              child: _isVideo
-                                  ? (_videoController != null &&
-                                          _videoController!.value.isInitialized
-                                      ? AspectRatio(
-                                          aspectRatio: _videoController!
-                                              .value.aspectRatio,
-                                          child: VideoPlayer(_videoController!),
-                                        )
-                                      : const SizedBox(
-                                          height: 180,
-                                          child: Center(
-                                              child:
-                                                  CircularProgressIndicator()),
-                                        ))
-                                  : Image.network(
-                                      imageUrl,
-                                      height: 180,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) =>
-                                              Container(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: _isVideo
+                                    ? (_videoController != null &&
+                                            _videoController!
+                                                .value.isInitialized
+                                        ? Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              AspectRatio(
+                                                aspectRatio: _videoController!
+                                                    .value.aspectRatio,
+                                                child: VideoPlayer(
+                                                    _videoController!),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    if (_videoController!
+                                                        .value.isPlaying) {
+                                                      _videoController!.pause();
+                                                    } else {
+                                                      _videoController!.play();
+                                                    }
+                                                  });
+                                                },
+                                                child: Container(
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Colors.black45,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  padding:
+                                                      const EdgeInsets.all(12),
+                                                  child: Icon(
+                                                    _videoController!
+                                                            .value.isPlaying
+                                                        ? Icons.pause
+                                                        : Icons.play_arrow,
+                                                    color: Colors.white,
+                                                    size: 40,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : const SizedBox(
+                                            height: 180,
+                                            child: Center(
+                                                child:
+                                                    CircularProgressIndicator()),
+                                          ))
+                                    : Image.network(
+                                        imageUrl,
                                         height: 180,
-                                        color: Colors.grey[300],
-                                        alignment: Alignment.center,
-                                        child: const Icon(Icons.broken_image,
-                                            size: 48, color: Colors.grey),
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                Container(
+                                          height: 180,
+                                          color: Colors.grey[300],
+                                          alignment: Alignment.center,
+                                          child: const Icon(Icons.broken_image,
+                                              size: 48, color: Colors.grey),
+                                        ),
                                       ),
-                                    ),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -187,30 +231,96 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
               ),
             ),
             const SizedBox(height: 22),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: widget.onEdit,
-                  style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    backgroundColor: const Color(0xFFFAE5ED),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(22),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                  child: Text(
-                    'Edit',
-                    style: GoogleFonts.poppins(
-                      color: const Color(0xFFD81B60),
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Tombol Edit
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: ElevatedButton(
+                      onPressed: widget.onEdit,
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        backgroundColor: const Color(0xFFFAE5ED),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                      ),
+                      child: Text(
+                        'Edit',
+                        style: GoogleFonts.poppins(
+                          color: const Color(0xFFD81B60),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+                // Tombol Hapus
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => CustomConfirmDialog(
+                            title: 'Konfirmasi Hapus',
+                            message:
+                                'Apakah Anda yakin ingin menghapus artikel ini?',
+                            confirmText: 'Hapus',
+                            cancelText: 'Batal',
+                            icon: Icons.delete_forever,
+                            iconColor: Colors.red,
+                          ),
+                        );
+
+                        if (confirm == true) {
+                          final int? articleId = args['id'];
+                          if (articleId == null) {
+                            MessagesWidget.showError(
+                                context, "ID artikel tidak ditemukan.");
+                            return;
+                          }
+
+                          await context
+                              .read<ArticlesProvider>()
+                              .deleteArticle(articleId);
+
+                          final error =
+                              context.read<ArticlesProvider>().errorMessage;
+                          if (error != null) {
+                            MessagesWidget.showError(context, error);
+                          } else {
+                            MessagesWidget.showSuccess(
+                                context, "Artikel berhasil dihapus.");
+                            Navigator.of(context).pop(true);
+                          }
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        backgroundColor: const Color(0xFFFAE5ED),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                      ),
+                      child: Text(
+                        'Hapus',
+                        style: GoogleFonts.poppins(
+                          color: const Color(0xFFD81B60),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 18),
           ],
