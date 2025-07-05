@@ -6,7 +6,7 @@ enum CardBgType { circleTopLeft, circleLeft }
 class CardWidget extends StatelessWidget {
   final String title;
   final String count;
-  final int additionalCount;
+  final int? additionalCount;
   final String iconAsset;
   final VoidCallback onTap;
   final bool isWide;
@@ -17,7 +17,7 @@ class CardWidget extends StatelessWidget {
     Key? key,
     required this.title,
     required this.count,
-    required this.additionalCount,
+    this.additionalCount,
     required this.iconAsset,
     required this.onTap,
     this.isWide = false,
@@ -66,7 +66,8 @@ class CardWidget extends StatelessWidget {
               ),
             ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 18.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 18.0, vertical: 18.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -116,19 +117,25 @@ class CardWidget extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 10),
+                   Visibility(
+                          visible: additionalCount != null,
+                          child: 
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: detailColor, width: 1),
                         ),
-                        child: Text(
-                          '+$additionalCount',
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: detailColor,
+                        
+                          child: Text(
+                            '+$additionalCount',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: detailColor,
+                            ),
                           ),
                         ),
                       ),
@@ -139,7 +146,6 @@ class CardWidget extends StatelessWidget {
                           width: isWide ? 120 : double.infinity,
                           child: ElevatedButton(
                             onPressed: onTap,
-                            
                             style: ElevatedButton.styleFrom(
                               backgroundColor: detailColor,
                               shape: RoundedRectangleBorder(

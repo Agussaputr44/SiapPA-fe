@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:siappa/providers/articles_provider.dart';
 import 'package:siappa/providers/auth_provider.dart';
@@ -29,10 +30,10 @@ class _ArticleScreenState extends State<ArticleScreen> {
   Widget build(BuildContext context) {
     final articlesProvider = context.watch<ArticlesProvider>();
     final filter = context.watch<FiltersProvider>();
-    final _isLoading = context.watch<ArticlesProvider>().isLoading;
+    final isLoading = context.watch<ArticlesProvider>().isLoading;
 
     return LoadingWidget(
-      isLoading: _isLoading,
+      isLoading: isLoading,
       child: Scaffold(
         appBar: AppBarWidget(
           title: 'Artikel',
@@ -61,13 +62,13 @@ class _ArticleScreenState extends State<ArticleScreen> {
                         onYearChanged: context.read<FiltersProvider>().setYear,
                       ),
                       const SizedBox(height: 10),
-                      // Render artikel dari provider
                       ...articlesProvider.articles.map((artikel) {
                         return ArticleCardWidget(
                           title: artikel.judul,
-                          // Tambahkan kategori kalau ada di model
-                          date: artikel.createdAt?.toIso8601String() ??
-                              'Tanggal tidak tersedia',
+                          date: artikel.createdAt != null
+                              ? DateFormat('dd MMM yyyy')
+                                  .format(artikel.createdAt!)
+                              : 'Tanggal tidak tersedia',
                           onDetail: () async {
                             final result = await Navigator.of(context)
                                 .pushNamed('/artikel/detail', arguments: {
@@ -84,7 +85,6 @@ class _ArticleScreenState extends State<ArticleScreen> {
                                   .loadAllArticles(authProvider);
                             }
                           },
-
                           bgCircleColor: const Color(0xFFF48FB1),
                           bgCircleShadow:
                               const Color(0xFFF48FB1).withOpacity(0.2),

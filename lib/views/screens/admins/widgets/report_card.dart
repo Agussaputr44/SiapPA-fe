@@ -4,7 +4,7 @@ class ReportCard extends StatelessWidget {
   final String imageAsset;
   final String title;
   final String subtitle;
-  final int additionalCount;
+  final int? additionalCount;
   final Color color;
   final VoidCallback onDetail;
   final bool isTitleUppercase;
@@ -14,7 +14,7 @@ class ReportCard extends StatelessWidget {
     required this.imageAsset,
     required this.title,
     required this.subtitle,
-    required this.additionalCount,
+    this.additionalCount,
     required this.color,
     required this.onDetail,
     this.isTitleUppercase = false,
@@ -101,8 +101,12 @@ class ReportCard extends StatelessWidget {
                     ],
                   ),
                 ),
+                Visibility(
+                    visible: additionalCount != null,
+                    child: 
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
@@ -115,12 +119,14 @@ class ReportCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: Text(
-                    '+$additionalCount',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: color,
+                   
+                    child: Text(
+                      '+$additionalCount',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: color,
+                      ),
                     ),
                   ),
                 ),

@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:siappa/providers/articles_provider.dart';
 import 'package:siappa/providers/filters_provider.dart';
+import 'package:siappa/providers/pengaduans_provider.dart';
 import 'package:siappa/providers/upload_media_provider.dart';
 import 'package:siappa/providers/users_provider.dart';
 import 'package:siappa/views/screens/admins/article/add_article_screen.dart';
 import 'package:siappa/views/screens/admins/article/detail_article_screen.dart';
 import 'package:siappa/views/screens/admins/article/article_screen.dart';
 import 'package:siappa/views/screens/admins/dashboard/dashboard_screen.dart';
-import 'package:siappa/views/screens/admins/report/report_screen.dart';
+import 'package:siappa/views/screens/admins/pengaduans/pengaduans_screen.dart';
 import 'package:siappa/views/screens/auth/login_screen.dart';
 import 'package:siappa/views/screens/auth/register_screen.dart';
 
@@ -40,6 +41,7 @@ class Main extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UsersProvider()),
         ChangeNotifierProvider(create: (_) => ArticlesProvider()),
         ChangeNotifierProvider(create: (_) => UploadMediaProvider()),
+        ChangeNotifierProvider(create: (_) => PengaduansProvider()),
       ],
       child: MaterialApp(
         title: 'SiapPA',
@@ -51,7 +53,7 @@ class Main extends StatelessWidget {
           '/dashboard': (context) => const DashboardScreen(),
           '/login': (context) => const LoginScreen(),
           '/register': (context) => RegisterScreen(),
-          '/laporan': (context) => const ReportScreen(),
+          '/laporan': (context) => const PengaduansScreen(),
           '/artikel': (context) => const ArticleScreen(),
           '/artikel/detail': (context) => const DetailArticleScreen(),
           '/artikel/add': (context) => const AddArticleScreen(),
