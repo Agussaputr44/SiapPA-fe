@@ -23,7 +23,6 @@ class ApiConfig {
   static String get baseApiUrl => "$baseUrl/api/$apiVersion";
 
   /// Base URL untuk resource gambar.
-  static String get baseImageUrl => "$baseUrl/storage/";
 
   /// Base URL untuk resource profil (misal: foto profil user).
   static String get baseImageUrlProfile => "$baseUrl/";

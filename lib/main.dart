@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:siappa/providers/articles_provider.dart';
 import 'package:siappa/providers/filters_provider.dart';
+import 'package:siappa/providers/upload_media_provider.dart';
 import 'package:siappa/providers/users_provider.dart';
 import 'package:siappa/views/screens/admins/article/add_article_screen.dart';
 import 'package:siappa/views/screens/admins/article/detail_article_screen.dart';
@@ -38,6 +39,7 @@ class Main extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => FiltersProvider()),
         ChangeNotifierProvider(create: (_) => UsersProvider()),
         ChangeNotifierProvider(create: (_) => ArticlesProvider()),
+        ChangeNotifierProvider(create: (_) => UploadMediaProvider()),
       ],
       child: MaterialApp(
         title: 'SiapPA',

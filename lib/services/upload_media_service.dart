@@ -6,12 +6,11 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 class UploadMediaService {
-  /// Upload multiple media files to Laravel backend
   Future<List<String>> uploadFiles({
-    required String token,
+    String? token,
     required List<File> files,
   }) async {
-    final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.uploadFiles)); // pastikan ini sesuai
+    final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.uploadFiles));
     final request = http.MultipartRequest('POST', url)
       ..headers['Authorization'] = 'Bearer $token';
 

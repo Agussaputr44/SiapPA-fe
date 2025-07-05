@@ -3,9 +3,6 @@ import 'package:http/http.dart' as http;
 import '../configs/api_config.dart';
 
 class ArticlesService {
-  static const Map<String, String> _jsonHeaders = {
-    'Content-Type': 'application/json'
-  };
   // method get all artikels with token in request
   Future<List<dynamic>> fetchAllArticles(String token) async {
     final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.articles));
@@ -20,7 +17,6 @@ class ArticlesService {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print(data);
       return data['data'];
     } else {
       final errorData = jsonDecode(response.body);
@@ -29,11 +25,15 @@ class ArticlesService {
     }
   }
 
-  Future<String> addArticle(String judul, String isi, String foto) async {
+  Future<String> addArticle(
+      String? token, String judul, String isi, String foto) async {
     final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.articles));
     final response = await http.post(
       url,
-      headers: _jsonHeaders,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
       body: jsonEncode({'judul': judul, 'isi': isi, 'foto': foto}),
     );
 
