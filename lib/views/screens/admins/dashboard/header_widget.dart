@@ -13,14 +13,14 @@ class HeaderWidget extends StatelessWidget {
     final screenWidth = AppSize.appWidth;
 
     // Tentukan fontSize berdasarkan lebar layar
-    double greetingFontSize = screenWidth * 0.06;   // ~24 pada 400px
-    double subtitleFontSize = screenWidth * 0.08;   // ~33 pada 400px
+    double greetingFontSize = screenWidth * 0.06;   
+    double subtitleFontSize = screenWidth * 0.08;   
 
     return Padding(
       padding: EdgeInsets.only(
-        top: screenWidth * 0.05, 
-        right: screenWidth * 0.02,
-        left: screenWidth * 0.02,
+        top: screenWidth * 0.07, 
+        right: screenWidth * 0.03,
+        left: screenWidth * 0.03,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

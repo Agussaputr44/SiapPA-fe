@@ -68,22 +68,58 @@ class ArticlesProvider with ChangeNotifier {
     notifyListeners();
   }
 
-Future<void> deleteArticle(int id) async {
-  _isLoading = true;
-  _successMessage = null;
-  _errorMessage = null;
-  notifyListeners();
-
-  try {
-    final token = await authProvider.token;
-    final message = await _articlesService.deleteArticle(token, id);
-    _successMessage = message;
-  } catch (e) {
-    _errorMessage = e.toString();
-  } finally {
-    _isLoading = false;
+  Future<void> deleteArticle(int id) async {
+    _isLoading = true;
+    _successMessage = null;
+    _errorMessage = null;
     notifyListeners();
-  }
-}
 
+    try {
+      final token = await authProvider.token;
+      final message = await _articlesService.deleteArticle(token, id);
+      _successMessage = message;
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+  // Future<void> getArticleById(int id) async {
+  //   _isLoading = true;
+  //   _successMessage = null;
+  //   _errorMessage = null;
+  //   notifyListeners();
+
+  //   try {
+  //     final token = await authProvider.token;
+  //     final message = await _articlesService.deleteArticle(token, id);
+  //     _successMessage = message;
+  //   } catch (e) {
+  //     _errorMessage = e.toString();
+  //   } finally {
+  //     _isLoading = false;
+  //     notifyListeners();
+  //   }
+  // }
+
+  Future<void> updateArticle(
+      int id, String judul, String isi, String foto) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final token = await authProvider.token;
+
+      final result =
+          await _articlesService.updateArticle(token, id, judul, isi, foto);
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }

@@ -59,6 +59,7 @@ class ApiConfig {
 
   /// Endpoint detail artikel berdasarkan [id].
   static String artikelDetail(int id) => "/artikels/$id";
+  static String artikelUpdate(int id) => "/artikels/$id";
 
 
   static String artikelDelete(int id) => "/artikels/$id";

@@ -27,11 +27,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     Future.microtask(() {
       final usersProvider = Provider.of<UsersProvider>(context, listen: false);
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final articlesProvider = Provider.of<ArticlesProvider>(context, listen: false);
       final pengaduansProvider =
           Provider.of<PengaduansProvider>(context, listen: false);
 
       usersProvider.loadUserDetails(authProvider);
       usersProvider.loadAllUsers(authProvider);
+      articlesProvider.loadAllArticles(authProvider);
       pengaduansProvider.loadAllPengaduans(authProvider);
     });
   }
@@ -52,10 +54,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       onWillPop: () async {
         final shouldExit = await showCustomConfirmDialog(
           context: context,
-          title: "Confirmation",
-          message: "Do you want to exit?",
-          confirmText: "Exit",
-          cancelText: "Cancel",
+          title: "Konfirmasi",
+          message: "Apakah anda yakin untuk keluar?",
+          confirmText: "Ya",
+          cancelText: "Batal",
           icon: Icons.exit_to_app,
           iconColor: Colors.red,
         );

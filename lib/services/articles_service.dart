@@ -75,4 +75,59 @@ class ArticlesService {
       throw Exception('Gagal menghapus artikel: ${response.reasonPhrase}');
     }
   }
+
+  // method for get artikel by id
+  // Future<String> getArticleById(String? token, int id) async{
+  //    final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.artikelDetail(id)));
+  //   final response = await http.delete(
+  //     url,
+  //     headers: {
+  //       'Authorization': 'Bearer $token',
+  //     },
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     final data = jsonDecode(response.body);
+  //     return data['message'] ?? 'Artikel berhasil diambil.';
+  //   } else {
+  //     throw Exception('Gagal mengambil artikel: ${response.reasonPhrase}');
+  //   }
+  // }
+
+  // New method for updating article
+  Future<String> updateArticle(String? token, int id, String judul, String isi, String foto) async {
+    final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.artikelUpdate(id))); 
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+      body: jsonEncode({
+        'judul': judul,
+        'isi': isi,
+        'foto': foto
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['message'] ?? 'Artikel berhasil diperbarui.';
+    } else {
+      String message = 'Artikel gagal diperbarui';
+      try {
+        final errorData = jsonDecode(response.body);
+        if (errorData is Map && errorData.containsKey('message')) {
+          message += ': ${errorData['message']}';
+        } else if (errorData is Map) {
+          message += ': ${errorData.values.join(', ')}';
+        } else {
+          message += ': ${response.body}';
+        }
+      } catch (_) {
+        message += ': ${response.body}';
+      }
+      throw Exception(message);
+    }
+  }
 }

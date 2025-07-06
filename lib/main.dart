@@ -8,6 +8,7 @@ import 'package:siappa/providers/users_provider.dart';
 import 'package:siappa/views/screens/admins/article/add_article_screen.dart';
 import 'package:siappa/views/screens/admins/article/detail_article_screen.dart';
 import 'package:siappa/views/screens/admins/article/article_screen.dart';
+import 'package:siappa/views/screens/admins/article/update_article_screen.dart';
 import 'package:siappa/views/screens/admins/dashboard/dashboard_screen.dart';
 import 'package:siappa/views/screens/admins/pengaduans/pengaduans_screen.dart';
 import 'package:siappa/views/screens/admins/users/users_screen.dart';
@@ -59,6 +60,7 @@ class Main extends StatelessWidget {
           '/artikel': (context) => const ArticleScreen(),
           '/artikel/detail': (context) => const DetailArticleScreen(),
           '/artikel/add': (context) => const AddArticleScreen(),
+          '/artikel/update': (context) => const UpdateArticleScreen(),
           // '/home': (context) => const NavBottom(),
           // '/pengaduan': (context) => const PengaduanPage(),
           // '/riwayat_pengaduan': (context) => const RiwayatPengaduan(),
