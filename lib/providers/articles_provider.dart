@@ -12,6 +12,9 @@ class ArticlesProvider with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+Map<String, dynamic>? _article;
+  Map<String, dynamic>? get article => _article;
+
   String? _successMessage;
   String? get successMessage => _successMessage;
 
@@ -85,23 +88,27 @@ class ArticlesProvider with ChangeNotifier {
       notifyListeners();
     }
   }
-  // Future<void> getArticleById(int id) async {
-  //   _isLoading = true;
-  //   _successMessage = null;
-  //   _errorMessage = null;
-  //   notifyListeners();
 
-  //   try {
-  //     final token = await authProvider.token;
-  //     final message = await _articlesService.deleteArticle(token, id);
-  //     _successMessage = message;
-  //   } catch (e) {
-  //     _errorMessage = e.toString();
-  //   } finally {
-  //     _isLoading = false;
-  //     notifyListeners();
-  //   }
-  // }
+Future<Map<String, dynamic>> getArticleById(int id) async {
+    _isLoading = true;
+    _successMessage = null;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final token = await authProvider.token;
+      final articleData = await _articlesService.getArticleById(token, id);
+      _article = articleData; // Store article data
+      _successMessage = 'Artikel berhasil diambil.';
+      return articleData; // Return article data for FutureBuilder
+    } catch (e) {
+      _errorMessage = e.toString();
+      throw e; // Propagate error to FutureBuilder
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 
   Future<void> updateArticle(
       int id, String judul, String isi, String foto) async {

@@ -77,22 +77,22 @@ class ArticlesService {
   }
 
   // method for get artikel by id
-  // Future<String> getArticleById(String? token, int id) async{
-  //    final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.artikelDetail(id)));
-  //   final response = await http.delete(
-  //     url,
-  //     headers: {
-  //       'Authorization': 'Bearer $token',
-  //     },
-  //   );
+Future<Map<String, dynamic>> getArticleById(String? token, int id) async {
+  final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.artikelDetail(id)));
+  final response = await http.get(
+    url,
+    headers: {
+      'Authorization': 'Bearer $token',
+    },
+  );
 
-  //   if (response.statusCode == 200) {
-  //     final data = jsonDecode(response.body);
-  //     return data['message'] ?? 'Artikel berhasil diambil.';
-  //   } else {
-  //     throw Exception('Gagal mengambil artikel: ${response.reasonPhrase}');
-  //   }
-  // }
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    return data; // Expecting data like {'id': 1, 'title': 'Title', 'content': 'Content', 'imageUrl': '/storage/uploads/...'}
+  } else {
+    throw Exception('Gagal mengambil artikel: ${response.reasonPhrase}');
+  }
+}
 
   // New method for updating article
   Future<String> updateArticle(String? token, int id, String judul, String isi, String foto) async {

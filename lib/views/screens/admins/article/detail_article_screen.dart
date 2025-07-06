@@ -66,33 +66,14 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
         ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: Stack(
                   children: [
-                    Positioned(
-                      left: 0,
-                      top: 0,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.only(topLeft: Radius.circular(18)),
-                        child: SizedBox(
-                          width: 90,
-                          height: 70,
-                          child: CustomPaint(
-                            painter: _CardCirclePainter(
-                              color: const Color(0xFFFFB6D6),
-                              shadow: const Color(0xFFFFB6D6),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                     Container(
                       width: double.infinity,
-                      margin: const EdgeInsets.only(top: 12),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(18),
@@ -236,9 +217,10 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                         },
                         style: ElevatedButton.styleFrom(
                           elevation: 0,
-                          backgroundColor: const Color(0xFFFAE5ED),
+                          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                           side: const BorderSide(color: Color(0xFFF48FB1), width: 2),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(22),
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 8),
                         ),
@@ -291,7 +273,7 @@ class _DetailArticleScreenState extends State<DetailArticleScreen> {
                           elevation: 0,
                           backgroundColor: const Color(0xFFFAE5ED),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(22),
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 8),
                         ),
