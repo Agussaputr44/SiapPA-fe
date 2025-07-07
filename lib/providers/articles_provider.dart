@@ -89,26 +89,6 @@ Map<String, dynamic>? _article;
     }
   }
 
-Future<Map<String, dynamic>> getArticleById(int id) async {
-    _isLoading = true;
-    _successMessage = null;
-    _errorMessage = null;
-    notifyListeners();
-
-    try {
-      final token = await authProvider.token;
-      final articleData = await _articlesService.getArticleById(token, id);
-      _article = articleData; // Store article data
-      _successMessage = 'Artikel berhasil diambil.';
-      return articleData; // Return article data for FutureBuilder
-    } catch (e) {
-      _errorMessage = e.toString();
-      throw e; // Propagate error to FutureBuilder
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
-  }
 
   Future<void> updateArticle(
       int id, String judul, String isi, String foto) async {

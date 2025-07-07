@@ -47,6 +47,9 @@ class ApiConfig {
   /// Endpoint mengambil data profil user saat ini.
   static const String getUserProfile = "/auth/user";
 
+  static const String updateUserProfile = "/auth/user";
+
+
   // === Endpoint Upload ===
 
   /// Endpoint upload file.

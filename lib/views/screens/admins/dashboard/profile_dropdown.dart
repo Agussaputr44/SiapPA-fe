@@ -96,7 +96,10 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
                             _buildMenuItem(
                               icon: Icons.settings,
                               title: 'Manage Account',
-                              onTap: _removeDropdown,
+                              onTap: () {
+                                _removeDropdown();
+                                Navigator.pushNamed(context, '/profile');
+                              },
                             ),
                             _buildMenuItem(
                               icon: Icons.logout,
@@ -105,10 +108,12 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
                                 // Tutup dropdown dulu
                                 _removeDropdown();
                                 // Tunggu overlay benar-benar hilang
-                                await Future.delayed(const Duration(milliseconds: 100));
+                                await Future.delayed(
+                                    const Duration(milliseconds: 100));
 
                                 // GUNAKAN CONTEXT PARENT (_parentContext), BUKAN overlayContext!
-                                final shouldLogout = await showCustomConfirmDialog(
+                                final shouldLogout =
+                                    await showCustomConfirmDialog(
                                   context: _parentContext,
                                   title: 'Logout Confirmation',
                                   message: 'Are you sure you want to logout?',
@@ -120,12 +125,16 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
                                 if (shouldLogout == true) {
                                   await authProvider.logout();
                                   if (!mounted) return;
-                                  Navigator.of(_parentContext).pushAndRemoveUntil(
+                                  Navigator.of(_parentContext)
+                                      .pushAndRemoveUntil(
                                     PageRouteBuilder(
-                                      pageBuilder: (context, animation, secondaryAnimation) =>
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
                                           const LoginScreen(),
-                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                        return FadeTransition(opacity: animation, child: child);
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        return FadeTransition(
+                                            opacity: animation, child: child);
                                       },
                                     ),
                                     (route) => false,
@@ -162,7 +171,6 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    // Simpan context utama untuk dipakai di dialog/navigasi
     _parentContext = context;
     return CompositedTransformTarget(
       link: _layerLink,
@@ -176,7 +184,8 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
               radius: 28,
               backgroundImage: (photoUrl != null && photoUrl.isNotEmpty)
                   ? NetworkImage(photoUrl)
-                  : const AssetImage('assets/icons/ic_profile.png') as ImageProvider,
+                  : const AssetImage('assets/icons/ic_profile.png')
+                      as ImageProvider,
             );
           },
         ),

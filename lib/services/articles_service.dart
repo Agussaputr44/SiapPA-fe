@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import '../configs/api_config.dart';
 
 class ArticlesService {
+
+
   // method get all artikels with token in request
   Future<List<dynamic>> fetchAllArticles(String token) async {
     final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.articles));
@@ -24,6 +26,7 @@ class ArticlesService {
           'Gagal memuat data: ${errorData['error'] ?? response.body}');
     }
   }
+
 
   Future<String> addArticle(
       String? token, String judul, String isi, String foto) async {
@@ -76,23 +79,6 @@ class ArticlesService {
     }
   }
 
-  // method for get artikel by id
-Future<Map<String, dynamic>> getArticleById(String? token, int id) async {
-  final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.artikelDetail(id)));
-  final response = await http.get(
-    url,
-    headers: {
-      'Authorization': 'Bearer $token',
-    },
-  );
-
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-    return data; // Expecting data like {'id': 1, 'title': 'Title', 'content': 'Content', 'imageUrl': '/storage/uploads/...'}
-  } else {
-    throw Exception('Gagal mengambil artikel: ${response.reasonPhrase}');
-  }
-}
 
   // New method for updating article
   Future<String> updateArticle(String? token, int id, String judul, String isi, String foto) async {

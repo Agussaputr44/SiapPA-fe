@@ -15,6 +15,38 @@ class UsersProvider with ChangeNotifier {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
+
+Future<void> updateUserProfile(
+  AuthProvider authProvider, {
+  String? name,
+  String? password,
+  String? fotoProfil,
+}) async {
+  if (!authProvider.isAuthenticated) return;
+
+  _isLoading = true;
+  _errorMessage = null;
+  notifyListeners();
+
+  try {
+    final token = authProvider.token;
+    if (token != null) {
+      final updatedUserData = await usersService.updateProfile(
+        token,
+        name: name,
+        password: password,
+        fotoProfil: fotoProfil,
+      );
+      user = UsersModel.fromJson(updatedUserData);
+    }
+  } catch (e) {
+    _errorMessage = "Gagal update profil: $e";
+  } finally {
+    _isLoading = false;
+    notifyListeners();
+  }
+}
+
   /// Fetch current user detail (based on token)
   Future<void> loadUserDetails(AuthProvider authProvider) async {
     if (!authProvider.isAuthenticated) return;

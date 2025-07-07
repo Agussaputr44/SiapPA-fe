@@ -16,7 +16,6 @@ class PengaduansService {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print("Fetched data: ${data['data']}");
       return data['data'];
     } else {
       final errorData = jsonDecode(response.body);
