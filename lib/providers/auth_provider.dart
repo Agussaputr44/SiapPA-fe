@@ -46,6 +46,8 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  /// Login with email and password
   Future<void> login(String email, String password) async {
     _isLoading = true;
     notifyListeners();
@@ -62,7 +64,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  /// register
+  /// Register with name, email, and password
   Future<bool> register(String name, String email, String password) async {
     _isLoading = true;
     _successMessage = null;
@@ -71,6 +73,27 @@ class AuthProvider with ChangeNotifier {
 
     try {
       final message = await _authService.register(name, email, password);
+      _successMessage = message;
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString().replaceFirst('Exception: ', '');
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  /// Update user password
+  Future<bool> updatePassword(String currentPassword, String newPassword) async {
+    _isLoading = true;
+    _successMessage = null;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final message = await _authService.updatePassword(currentPassword, newPassword);
       _successMessage = message;
       _isLoading = false;
       notifyListeners();

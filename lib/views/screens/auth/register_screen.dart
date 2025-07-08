@@ -14,7 +14,7 @@ import '../../widgets/messages_widget.dart';
 /// pendaftaran pengguna. Ini mengelola status pemuatan gabungan dari `AuthProvider`
 /// (untuk proses otentikasi umum seperti pendaftaran email/kata sandi) dan
 /// status pemuatan spesifik untuk pendaftaran Google.
-/// 
+///
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
@@ -23,7 +23,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  
   /// Status pemuatan spesifik untuk proses masuk dengan Google.
   bool _isGoogleSignInLoading = false;
 
@@ -160,7 +159,8 @@ class _BottomPortionState extends State<_BottomPortion> {
   /// dan kemudian memanggil `AuthProvider` untuk menyelesaikan pendaftaran.
   /// Ini juga menangani pesan sukses/error dan navigasi.
   Future<void> _handleGoogleSignIn() async {
-    widget.onGoogleSignInLoadingChange(true); // Beri tahu induk untuk menampilkan pemuatan Google
+    widget.onGoogleSignInLoadingChange(
+        true); // Beri tahu induk untuk menampilkan pemuatan Google
     final googleSignIn = GoogleSignIn();
     try {
       final googleUser = await googleSignIn.signIn();
@@ -171,8 +171,8 @@ class _BottomPortionState extends State<_BottomPortion> {
       final googleAuth = await googleUser.authentication;
       final idToken = googleAuth.idToken;
       if (idToken == null) {
-        MessagesWidget.showError(
-            context, 'Gagal mendapatkan ID Token dari Google. Silakan coba lagi.');
+        MessagesWidget.showError(context,
+            'Gagal mendapatkan ID Token dari Google. Silakan coba lagi.');
         return;
       }
 
@@ -182,14 +182,17 @@ class _BottomPortionState extends State<_BottomPortion> {
       await authProvider.loginWithGoogle(idToken);
 
       if (!mounted) return;
-      MessagesWidget.showSuccess(context, 'Pendaftaran berhasil, selamat datang!');
+      MessagesWidget.showSuccess(
+          context, 'Pendaftaran berhasil, selamat datang!');
       Navigator.pushReplacementNamed(context, '/dashboard');
     } catch (e) {
       String errorMessage = "Terjadi kesalahan, silakan coba lagi.";
       if (e.toString().contains('sign_in_failed')) {
-        errorMessage = "Pendaftaran gagal, akun Google tidak valid atau telah dibatalkan.";
+        errorMessage =
+            "Pendaftaran gagal, akun Google tidak valid atau telah dibatalkan.";
       } else if (e.toString().contains('network_error')) {
-        errorMessage = "Tidak dapat terhubung ke Google, periksa internet Anda.";
+        errorMessage =
+            "Tidak dapat terhubung ke Google, periksa internet Anda.";
       } else if (e.toString().contains('popup_closed_by_user')) {
         errorMessage = "Pendaftaran dibatalkan oleh pengguna.";
       } else if (e.toString().contains('Gagal mendapatkan ID Token')) {
@@ -202,7 +205,8 @@ class _BottomPortionState extends State<_BottomPortion> {
       }
     } finally {
       if (mounted) {
-        widget.onGoogleSignInLoadingChange(false); // Beri tahu induk untuk menyembunyikan pemuatan
+        widget.onGoogleSignInLoadingChange(
+            false); // Beri tahu induk untuk menyembunyikan pemuatan
       }
     }
   }
@@ -214,10 +218,17 @@ class _BottomPortionState extends State<_BottomPortion> {
 
     return Container(
       width: AppSize.appWidth * 0.5,
-      height: AppSize.appHeight * 0.65,
+      height: AppSize.appHeight * 0.6,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.pink[100],
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.fromRGBO(241, 140, 176, 1),
+            Color.fromRGBO(248, 187, 208, 1),
+          ],
+        ),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
       ),
       child: SingleChildScrollView(
@@ -294,7 +305,9 @@ class _BottomPortionState extends State<_BottomPortion> {
                   prefixIcon: const Icon(Icons.lock, color: Colors.white),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                      _obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                       color: Colors.white,
                     ),
                     onPressed: () {
@@ -355,8 +368,9 @@ class _BottomPortionState extends State<_BottomPortion> {
                     : () async {
                         if (_formKey.currentState!.validate()) {
                           // Ini menggunakan isLoading internal AuthProvider
-                          bool result =
-                              await Provider.of<AuthProvider>(context, listen: false).register(
+                          bool result = await Provider.of<AuthProvider>(context,
+                                  listen: false)
+                              .register(
                             _nameController.text,
                             _emailController.text,
                             _passwordController.text,
@@ -364,7 +378,9 @@ class _BottomPortionState extends State<_BottomPortion> {
                           if (result) {
                             MessagesWidget.showSuccess(
                                 context,
-                                Provider.of<AuthProvider>(context, listen: false).successMessage ??
+                                Provider.of<AuthProvider>(context,
+                                            listen: false)
+                                        .successMessage ??
                                     'Registrasi berhasil!');
                             if (mounted) {
                               Navigator.pop(context);
@@ -372,7 +388,9 @@ class _BottomPortionState extends State<_BottomPortion> {
                           } else {
                             MessagesWidget.showError(
                                 context,
-                                Provider.of<AuthProvider>(context, listen: false).errorMessage ??
+                                Provider.of<AuthProvider>(context,
+                                            listen: false)
+                                        .errorMessage ??
                                     'Registrasi gagal.');
                             _clearField();
                           }

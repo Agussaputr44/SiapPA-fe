@@ -7,8 +7,11 @@ import 'package:provider/provider.dart';
 import 'package:siappa/providers/upload_media_provider.dart';
 import 'package:siappa/providers/users_provider.dart';
 import 'package:siappa/views/widgets/loading_widget.dart';
+import '../../../../helpers/dialog_helper.dart';
+import '../../../../helpers/profile_url_helper.dart';
 import '../../../../providers/auth_provider.dart';
 import '../../../widgets/messages_widget.dart';
+import '../../auth/login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -20,7 +23,15 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late TextEditingController _nameController;
   late TextEditingController _emailController;
+  late TextEditingController _currentPasswordController;
+  late TextEditingController _newPasswordController;
+  late TextEditingController _confirmPasswordController;
+
   bool _isEditing = false;
+  bool _isChangingPassword = false;
+  bool _isCurrentPasswordVisible = false;
+  bool _isNewPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
   File? _selectedFile;
 
@@ -29,6 +40,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     _nameController = TextEditingController();
     _emailController = TextEditingController();
+    _currentPasswordController = TextEditingController();
+    _newPasswordController = TextEditingController();
+    _confirmPasswordController = TextEditingController();
 
     // Load user details when screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -40,6 +54,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
+    _currentPasswordController.dispose();
+    _newPasswordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -47,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final result = await FilePicker.platform.pickFiles(
       allowMultiple: false,
       type: FileType.custom,
-      allowedExtensions: ['jpg', 'png', 'jpeg', 'gif', 'mp4', 'mov', 'avi'],
+      allowedExtensions: ['jpg', 'png', 'jpeg'],
     );
 
     if (result != null && result.files.single.path != null) {
@@ -62,118 +79,211 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final userProvider = Provider.of<UsersProvider>(context, listen: false);
 
+    print('Loading user data with token: ${authProvider.token}');
     await userProvider.loadUserDetails(authProvider);
 
     // Update controllers with loaded data
     if (userProvider.user != null) {
       _nameController.text = userProvider.user!.name ?? '';
       _emailController.text = userProvider.user!.email ?? '';
+      print(
+          'Loaded user: ${userProvider.user!.name}, ${userProvider.user!.email}, ${userProvider.user!.fotoProfile}');
+    } else {
+      print('No user data loaded');
     }
   }
 
   // Save updated user data
   Future<void> _saveUserData() async {
-  final userProvider = Provider.of<UsersProvider>(context, listen: false);
-  final authProvider = Provider.of<AuthProvider>(context, listen: false);
-  final uploadProvider = Provider.of<UploadMediaProvider>(context, listen: false);
+    final userProvider = Provider.of<UsersProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final uploadProvider =
+        Provider.of<UploadMediaProvider>(context, listen: false);
 
-  final name = _nameController.text.trim();
+    uploadProvider.init(authProvider);
 
-  // Validate input
-  if (name.isEmpty) {
-    MessagesWidget.showError(context, "Nama harus diisi.");
-    return;
-  }
+    final name = _nameController.text.trim();
 
-  try {
-    // Show loading
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Center(
-        child: LoadingWidget(
-          isLoading: true,
-          child: Container(),
+    if (name.isEmpty) {
+      MessagesWidget.showError(context, "Nama harus diisi.");
+      return;
+    }
+
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(
+          child: LoadingWidget(
+            isLoading: true,
+            child: Container(),
+          ),
         ),
-      ),
-    );
+      );
 
-    String? fotoUrl = userProvider.user?.fotoProfile; // Retain existing URL if no new file
-    if (_selectedFile != null) {
-      // Validate file type
-      final validExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-      final fileExtension = _selectedFile!.path.split('.').last.toLowerCase();
+      String? fotoUrl = userProvider.user?.fotoProfile;
+      print('Initial fotoUrl: $fotoUrl');
 
-      if (!validExtensions.contains(fileExtension)) {
-        Navigator.pop(context); // Hide loading
-        MessagesWidget.showError(context, "Tipe file tidak didukung.");
+      if (_selectedFile != null) {
+        final validExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        final fileExtension = _selectedFile!.path.split('.').last.toLowerCase();
+        print(
+            'Selected file: ${_selectedFile!.path}, extension: $fileExtension');
+
+        if (!validExtensions.contains(fileExtension)) {
+          Navigator.pop(context);
+          MessagesWidget.showError(context, "Tipe file tidak didukung.");
+          return;
+        }
+
+        await uploadProvider.upload([_selectedFile!]);
+        print('Upload result: ${uploadProvider.uploadedFiles}');
+
+        if (uploadProvider.uploadedFiles.isEmpty) {
+          Navigator.pop(context);
+          throw Exception('File gagal diupload.');
+        }
+
+        fotoUrl = uploadProvider.uploadedFiles.first;
+        print('Uploaded fotoUrl: $fotoUrl');
+      }
+
+      if (fotoUrl == null) {
+        Navigator.pop(context);
+        MessagesWidget.showError(context, "URL foto profil tidak valid.");
         return;
       }
 
-      // Upload file
-      await uploadProvider.upload([_selectedFile!]);
+      print('Updating profile with name: $name, fotoUrl: $fotoUrl');
+      await userProvider.updateUserProfile(
+        authProvider,
+        name: name,
+        fotoProfile: fotoUrl,
+      );
 
-      if (uploadProvider.uploadedFiles.isEmpty) {
-        Navigator.pop(context); // Hide loading
-        throw Exception('File gagal diupload.');
-      }
+      Navigator.pop(context);
+      MessagesWidget.showSuccess(context, "Profil berhasil diperbarui.");
 
-      fotoUrl = uploadProvider.uploadedFiles.first;
+      setState(() {
+        _isEditing = false;
+        _selectedFile = null;
+      });
+
+      await _loadUserData();
+    } catch (e) {
+      Navigator.pop(context);
+      MessagesWidget.showError(context, "Gagal memperbarui profil: $e");
+      print('Error updating profile: $e');
+    }
+  }
+
+  // Update password
+  Future<void> _updatePassword() async {
+    final currentPassword = _currentPasswordController.text.trim();
+    final newPassword = _newPasswordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
+
+    // Validate inputs
+    if (currentPassword.isEmpty ||
+        newPassword.isEmpty ||
+        confirmPassword.isEmpty) {
+      MessagesWidget.showError(context, "Semua field password harus diisi.");
+      return;
     }
 
-    // Update user profile
-    await userProvider.updateUserProfile(
-      authProvider,
-      name: name,
-      fotoProfil: fotoUrl, 
-    );
+    if (newPassword != confirmPassword) {
+      MessagesWidget.showError(
+          context, "Password baru dan konfirmasi password tidak cocok.");
+      return;
+    }
 
-    // Hide loading
-    Navigator.pop(context);
+    if (newPassword.length < 6) {
+      MessagesWidget.showError(context, "Password baru minimal 6 karakter.");
+      return;
+    }
 
-    // Show success message
-    MessagesWidget.showSuccess(context, "Profil berhasil diperbarui.");
+    try {
+      // Show loading
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(
+          child: LoadingWidget(
+            isLoading: true,
+            child: Container(),
+          ),
+        ),
+      );
 
-    // Update UI state
-    setState(() {
-      _isEditing = false;
-      _selectedFile = null; // Reset selected file
-    });
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    // Navigate to profile screen or stay on current screen
-    Navigator.of(context).pushNamedAndRemoveUntil('/profile', (route) => false);
-  } catch (e) {
-    // Hide loading
-    Navigator.pop(context);
+      // Update password using AuthProvider
+      final success =
+          await authProvider.updatePassword(currentPassword, newPassword);
 
-    // Show error message
-    MessagesWidget.showError(context, "Gagal memperbarui profil: $e");
+      Navigator.pop(context);
+
+      if (success) {
+        // Show success message
+        MessagesWidget.showSuccess(context,
+            authProvider.successMessage ?? "Password berhasil diperbarui.");
+
+        // Clear password fields and exit changing password mode
+        _currentPasswordController.clear();
+        _newPasswordController.clear();
+        _confirmPasswordController.clear();
+
+        setState(() {
+          _isChangingPassword = false;
+        });
+      } else {
+        // Show error message from provider
+        MessagesWidget.showError(context,
+            authProvider.errorMessage ?? "Gagal memperbarui password.");
+      }
+    } catch (e) {
+      // Hide loading
+      Navigator.pop(context);
+
+      // Show error message
+      MessagesWidget.showError(context, "Gagal memperbarui password: $e");
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 234, 102, 216),
-              Color.fromARGB(255, 190, 85, 155),
-            ],
+        final isLoading = context.watch<UsersProvider>().isLoading;
+    return LoadingWidget(
+
+      isLoading: isLoading,
+      child: Scaffold(
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromRGBO(241, 140, 176, 1),
+                Color.fromRGBO(248, 187, 208, 1),
+
+              ],
+            ),
           ),
-        ),
-        child: LoadingWidget(
-          isLoading: UsersProvider().isLoading,
           child: SafeArea(
             child: Consumer2<UsersProvider, AuthProvider>(
               builder: (context, userProvider, authProvider, child) {
                 // Show loading state
-
+                if (userProvider.isLoading) {
+                  return const Center(
+                    child: LoadingWidget(
+                      isLoading: true,
+                      child: SizedBox(),
+                    ),
+                  );
+                }
+      
                 // Show error state
                 if (userProvider.errorMessage != null) {
                   return Center(
@@ -199,7 +309,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onPressed: _loadUserData,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
-                            foregroundColor: Colors.pink,
+                            foregroundColor:
+                                const Color.fromARGB(255, 234, 102, 216),
                           ),
                           child: Text(
                             'Coba Lagi',
@@ -210,9 +321,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   );
                 }
-
-                final user = UsersProvider().user;
-
+      
+                final user = userProvider.user;
+      
                 return RefreshIndicator(
                   onRefresh: _loadUserData,
                   child: SingleChildScrollView(
@@ -258,6 +369,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   onPressed: () {
                                     setState(() {
                                       _isEditing = !_isEditing;
+                                      if (!_isEditing) {
+                                        _selectedFile = null;
+                                      }
                                     });
                                   },
                                 ),
@@ -265,9 +379,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                         ),
-
+      
                         const SizedBox(height: 20),
-
+      
                         // Profile Avatar with Shadow
                         Container(
                           decoration: BoxDecoration(
@@ -287,11 +401,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 backgroundColor: Colors.white,
                                 child: CircleAvatar(
                                   radius: 55,
-                                  backgroundImage: user?.fotoProfile != null
-                                      ? NetworkImage(user!.fotoProfile!)
-                                      : const AssetImage(
-                                              'assets/icons/ic_profile.png')
-                                          as ImageProvider,
+                                  backgroundImage: _selectedFile != null
+                                      ? FileImage(_selectedFile!)
+                                      : (user?.fotoProfile != null &&
+                                              user!.fotoProfile!.isNotEmpty)
+                                          ? NetworkImage(
+                                              getFotoUrl(user.fotoProfile))
+                                          : const AssetImage(
+                                                  'assets/icons/ic_profile.png')
+                                              as ImageProvider,
                                 ),
                               ),
                               if (_isEditing)
@@ -300,11 +418,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   right: 0,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Colors.pink,
+                                      color: const Color.fromARGB(
+                                          255, 234, 102, 216),
                                       shape: BoxShape.circle,
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.pink.withOpacity(0.4),
+                                          color: Colors.black.withOpacity(0.2),
                                           blurRadius: 8,
                                           offset: const Offset(0, 4),
                                         ),
@@ -313,24 +432,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     child: IconButton(
                                       icon: const Icon(Icons.camera_alt,
                                           color: Colors.white, size: 20),
-                                      onPressed: () {
-                                        // Handle image change
-                                        _showImagePicker(
-                                        
-                                        );
-                                      },
+                                      onPressed: _showImagePicker,
                                     ),
                                   ),
                                 ),
                             ],
                           ),
                         ),
-
-                        const SizedBox(height: 20),
-
-                        const SizedBox(height: 8),
-
-                        // Main Content Card
+      
+                        const SizedBox(height: 30),
+      
+                        // Manage Profile Card
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 20),
                           padding: const EdgeInsets.all(24),
@@ -356,9 +468,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: Colors.grey[800],
                                 ),
                               ),
-
+      
                               const SizedBox(height: 24),
-
+      
                               // Name Field
                               _buildInputField(
                                 label: 'Name',
@@ -366,9 +478,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 icon: Icons.person_outline,
                                 isEditable: _isEditing,
                               ),
-
+      
                               const SizedBox(height: 20),
-
+      
                               // Email Field
                               _buildInputField(
                                 label: 'Email',
@@ -376,9 +488,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 icon: Icons.email_outlined,
                                 isEditable: false,
                               ),
-
+      
                               const SizedBox(height: 32),
-
+      
                               // Action Buttons
                               if (_isEditing)
                                 Row(
@@ -395,6 +507,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           }
                                           setState(() {
                                             _isEditing = false;
+                                            _selectedFile = null;
                                           });
                                         },
                                         style: OutlinedButton.styleFrom(
@@ -419,11 +532,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     const SizedBox(width: 16),
                                     Expanded(
                                       child: ElevatedButton(
-                                        onPressed: () {
-                                          _saveUserData();
-                                        },
+                                        onPressed: _saveUserData,
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.pink,
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 234, 102, 216),
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 16),
                                           shape: RoundedRectangleBorder(
@@ -446,22 +558,246 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                         ),
-
-                        const SizedBox(height: 10),
-
+      
+                        const SizedBox(height: 20),
+      
+                        // Settings Card
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Settings',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.grey[800],
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(
+                                      _isChangingPassword
+                                          ? Icons.close
+                                          : Icons.lock_outline,
+                                      color: const Color.fromARGB(
+                                          255, 234, 102, 216),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isChangingPassword =
+                                            !_isChangingPassword;
+                                        if (!_isChangingPassword) {
+                                          _currentPasswordController.clear();
+                                          _newPasswordController.clear();
+                                          _confirmPasswordController.clear();
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                              if (!_isChangingPassword) ...[
+                                const SizedBox(height: 16),
+                                ListTile(
+                                  leading: const Icon(Icons.lock_outline,
+                                      color: Color.fromARGB(255, 234, 102, 216)),
+                                  title: Text(
+                                    'Ubah Password',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    'Klik untuk mengubah password',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  trailing: const Icon(Icons.arrow_forward_ios,
+                                      size: 16),
+                                  onTap: () {
+                                    setState(() {
+                                      _isChangingPassword = true;
+                                    });
+                                  },
+                                ),
+                              ],
+                              if (_isChangingPassword) ...[
+                                const SizedBox(height: 24),
+      
+                                // Current Password Field
+                                _buildPasswordField(
+                                  label: 'Password Saat Ini',
+                                  controller: _currentPasswordController,
+                                  isVisible: _isCurrentPasswordVisible,
+                                  onVisibilityToggle: () {
+                                    setState(() {
+                                      _isCurrentPasswordVisible =
+                                          !_isCurrentPasswordVisible;
+                                    });
+                                  },
+                                ),
+      
+                                const SizedBox(height: 20),
+      
+                                // New Password Field
+                                _buildPasswordField(
+                                  label: 'Password Baru',
+                                  controller: _newPasswordController,
+                                  isVisible: _isNewPasswordVisible,
+                                  onVisibilityToggle: () {
+                                    setState(() {
+                                      _isNewPasswordVisible =
+                                          !_isNewPasswordVisible;
+                                    });
+                                  },
+                                ),
+      
+                                const SizedBox(height: 20),
+      
+                                // Confirm Password Field
+                                _buildPasswordField(
+                                  label: 'Konfirmasi Password Baru',
+                                  controller: _confirmPasswordController,
+                                  isVisible: _isConfirmPasswordVisible,
+                                  onVisibilityToggle: () {
+                                    setState(() {
+                                      _isConfirmPasswordVisible =
+                                          !_isConfirmPasswordVisible;
+                                    });
+                                  },
+                                ),
+      
+                                const SizedBox(height: 32),
+      
+                                // Password Action Buttons
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: OutlinedButton(
+                                        onPressed: () {
+                                          _currentPasswordController.clear();
+                                          _newPasswordController.clear();
+                                          _confirmPasswordController.clear();
+                                          setState(() {
+                                            _isChangingPassword = false;
+                                          });
+                                        },
+                                        style: OutlinedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 16),
+                                          side: BorderSide(
+                                              color: Colors.grey[300]!),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Batal',
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: _updatePassword,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 234, 102, 216),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 16),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          elevation: 3,
+                                        ),
+                                        child: Text(
+                                          'Update Password',
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+      
+                        const SizedBox(height: 20),
+      
                         // Logout Button
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 20),
                           width: double.infinity,
                           child: OutlinedButton(
-                            onPressed: () {
-                              _showLogoutDialog();
-                            },
+                            onPressed:() async {
+                                  // Tutup dropdown dulu
+                                  // Tunggu overlay benar-benar hilang
+                                  await Future.delayed(
+                                      const Duration(milliseconds: 100));
+      
+                                  // GUNAKAN CONTEXT PARENT (_parentContext), BUKAN overlayContext!
+                                  final shouldLogout =
+                                      await showCustomConfirmDialog(
+                                    context: context,
+                                    title: 'Logout Confirmation',
+                                    message: 'Are you sure you want to logout?',
+                                    confirmText: 'Logout',
+                                    cancelText: 'Cancel',
+                                    icon: Icons.logout,
+                                    iconColor: Colors.red,
+                                  );
+                                  if (shouldLogout == true) {
+                                    await authProvider.logout();
+                                    if (!mounted) return;
+                                    Navigator.of(context)
+                                        .pushAndRemoveUntil(
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) =>
+                                            const LoginScreen(),
+                                        transitionsBuilder: (context, animation,
+                                            secondaryAnimation, child) {
+                                          return FadeTransition(
+                                              opacity: animation, child: child);
+                                        },
+                                      ),
+                                      (route) => false,
+                                    );
+                                  }},
                             style: OutlinedButton.styleFrom(
                               backgroundColor: Colors.white,
                               foregroundColor: Colors.red,
-                              side: const BorderSide(
-                                  color: Colors.red, width: 1.5),
+                              side:
+                                  const BorderSide(color: Colors.red, width: 1.5),
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -483,7 +819,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                         ),
-
+      
                         const SizedBox(height: 40),
                       ],
                     ),
@@ -520,8 +856,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             color: isEditable ? Colors.grey[50] : Colors.grey[100],
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color:
-                  isEditable ? Colors.pink.withOpacity(0.3) : Colors.grey[300]!,
+              color: isEditable
+                  ? const Color.fromARGB(255, 234, 102, 216).withOpacity(0.3)
+                  : Colors.grey[300]!,
             ),
           ),
           child: TextField(
@@ -534,7 +871,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
             decoration: InputDecoration(
               prefixIcon: Icon(
                 icon,
-                color: isEditable ? Colors.pink : Colors.grey[400],
+                color: isEditable
+                    ? const Color.fromARGB(255, 234, 102, 216)
+                    : Colors.grey[400],
+              ),
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.all(16),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPasswordField({
+    required String label,
+    required TextEditingController controller,
+    required bool isVisible,
+    required VoidCallback onVisibilityToggle,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.poppins(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey[600],
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[50],
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: const Color.fromARGB(255, 234, 102, 216).withOpacity(0.3),
+            ),
+          ),
+          child: TextField(
+            controller: controller,
+            obscureText: !isVisible,
+            style: GoogleFonts.poppins(
+              fontSize: 16,
+              color: Colors.grey[800],
+            ),
+            decoration: InputDecoration(
+              prefixIcon: const Icon(
+                Icons.lock_outline,
+                color: Color.fromARGB(255, 234, 102, 216),
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  isVisible ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.grey[400],
+                ),
+                onPressed: onVisibilityToggle,
               ),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.all(16),
@@ -583,7 +976,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onTap: () {
                       _pickFile();
                       Navigator.pop(context);
-                      
                     },
                   ),
                 ],
@@ -626,70 +1018,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _showLogoutDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Text(
-            'Logout',
-            style: GoogleFonts.poppins(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          content: Text(
-            'Apakah Anda yakin ingin keluar?',
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              color: Colors.grey[600],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                'Batal',
-                style: GoogleFonts.poppins(
-                  color: Colors.grey[600],
-                ),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                Navigator.pop(context);
-
-                // Handle logout logic
-                final authProvider =
-                    Provider.of<AuthProvider>(context, listen: false);
-                await authProvider.logout();
-
-                // Navigate to login screen
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  '/login',
-                  (route) => false,
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text(
-                'Logout',
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
 }

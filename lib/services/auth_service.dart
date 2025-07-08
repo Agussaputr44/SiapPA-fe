@@ -1,14 +1,18 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:siappa/configs/api_config.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import '../configs/api_config.dart';
 
 /// AuthService handles authentication-related operations:
-/// login, registration, and logout. Communicates with the backend API.
+/// login, registration, logout, and password updates. Communicates with the backend API.
 class AuthService {
   /// Request Headers
   static const Map<String, String> _jsonHeaders = {
     'Content-Type': 'application/json'
   };
+
+  final _secureStorage = const FlutterSecureStorage();
 
   /// Login with Google.
   /// [token] is the Google ID token.
@@ -119,6 +123,67 @@ class AuthService {
         message += ': ${response.body}';
       }
       throw Exception(message);
+    }
+  }
+
+  /// Update user password.
+  /// [currentPassword] is the current password, [newPassword] is the new password.
+  /// Returns success message if successful.
+  Future<String> updatePassword(String currentPassword, String newPassword) async {
+    try {
+      // Validate new password
+      if (newPassword.isEmpty || newPassword.length < 8) {
+        // Fluttertoast.showToast(
+        //   msg: 'Password harus memiliki minimal 8 karakter',
+        //   toastLength: Toast.LENGTH_SHORT,
+        // );
+        throw Exception('Password invalid');
+      }
+
+      // Retrieve auth token
+      String? token = await _secureStorage.read(key: 'auth_token');
+      if (token == null || token.isEmpty) {
+        // Fluttertoast.showToast(
+        //   msg: 'Pengguna belum terautentikasi',
+        //   toastLength: Toast.LENGTH_SHORT,
+        // );
+        throw Exception('Tidak terautentikasi');
+      }
+
+      final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.updatePassword));
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          ..._jsonHeaders,
+        },
+        body: jsonEncode({
+          'current_password': currentPassword,
+          'new_password': newPassword,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['message'] ?? 'Password berhasil diubah';
+      } else {
+        String message = 'Gagal mengubah password';
+        try {
+          final errorData = jsonDecode(response.body);
+          message += ': ${errorData['error'] ?? response.body}';
+        } catch (_) {
+          message += ': ${response.body}';
+        }
+        throw Exception(message);
+      }
+    } catch (e) {
+      print('Error mengubah password: $e');
+      // Fluttertoast.showToast(
+      //   msg: 'Terjadi kesalahan: $e',
+      //   toastLength: Toast.LENGTH_SHORT,
+      // );
+      rethrow;
     }
   }
 }

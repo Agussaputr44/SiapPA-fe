@@ -50,6 +50,9 @@ class ApiConfig {
   static const String updateUserProfile = "/auth/user";
 
 
+  static const String updatePassword = "/auth/update-password";
+
+
   // === Endpoint Upload ===
 
   /// Endpoint upload file.

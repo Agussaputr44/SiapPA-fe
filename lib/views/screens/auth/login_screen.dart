@@ -190,8 +190,15 @@ class _BottomPortion extends StatelessWidget {
       height: height,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.pink[100],
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+ gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromRGBO(241, 140, 176, 1),
+                Color.fromRGBO(248, 187, 208, 1),
+
+              ],
+            ),        borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
       ),
       child: SingleChildScrollView(
         child: Form(

@@ -10,6 +10,8 @@ import 'package:siappa/views/screens/admins/widgets/app_bar_widget.dart';
 import 'package:siappa/views/widgets/loading_widget.dart';
 import 'package:siappa/views/widgets/messages_widget.dart';
 
+import '../../../../providers/auth_provider.dart';
+
 class UpdateArticleScreen extends StatefulWidget {
   const UpdateArticleScreen({super.key});
 
@@ -59,7 +61,9 @@ class _UpdateArticleScreenState extends State<UpdateArticleScreen> {
 
   Future<void> _submitArticle(BuildContext context) async {
     final uploadProvider = context.read<UploadMediaProvider>();
+     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final articleProvider = context.read<ArticlesProvider>();
+    uploadProvider.init(authProvider);
 
     final judul = _judulController.text.trim();
     final isi = _isiController.text.trim();

@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:siappa/providers/users_provider.dart';
 import '../../../../helpers/dialog_helper.dart';
+import '../../../../helpers/profile_url_helper.dart';
 import '../../../../providers/auth_provider.dart';
 import '../../auth/login_screen.dart';
 
@@ -183,7 +184,7 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
               backgroundColor: Colors.grey[200],
               radius: 28,
               backgroundImage: (photoUrl != null && photoUrl.isNotEmpty)
-                  ? NetworkImage(photoUrl)
+                  ? NetworkImage(getFotoUrl(photoUrl))
                   : const AssetImage('assets/icons/ic_profile.png')
                       as ImageProvider,
             );

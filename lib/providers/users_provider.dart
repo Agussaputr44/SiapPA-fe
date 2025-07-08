@@ -20,7 +20,7 @@ Future<void> updateUserProfile(
   AuthProvider authProvider, {
   String? name,
   String? password,
-  String? fotoProfil,
+  String? fotoProfile,
 }) async {
   if (!authProvider.isAuthenticated) return;
 
@@ -35,7 +35,7 @@ Future<void> updateUserProfile(
         token,
         name: name,
         password: password,
-        fotoProfil: fotoProfil,
+        fotoProfile: fotoProfile,
       );
       user = UsersModel.fromJson(updatedUserData);
     }

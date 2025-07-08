@@ -5,7 +5,11 @@ import '../services/upload_media_service.dart';
 
 class UploadMediaProvider with ChangeNotifier {
   final UploadMediaService _uploadService = UploadMediaService();
-  AuthProvider authProvider = AuthProvider();
+  late AuthProvider authProvider;
+
+  void init(AuthProvider authProvider) {
+    this.authProvider = authProvider;
+  }
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;

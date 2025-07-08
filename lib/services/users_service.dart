@@ -29,7 +29,7 @@ Future<Map<String, dynamic>> updateProfile(
   String token, {
   String? name,
   String? password,
-  String? fotoProfil,
+  String? fotoProfile,
 }) async {
   final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.updateUserProfile));
   final body = <String, dynamic>{};
@@ -40,8 +40,8 @@ Future<Map<String, dynamic>> updateProfile(
   if (password != null && password.isNotEmpty) {
     body['password'] = password;
   }
-  if (fotoProfil != null && fotoProfil.isNotEmpty) {
-    body['foto_profil'] = fotoProfil;
+  if (fotoProfile != null && fotoProfile.isNotEmpty) {
+    body['foto_profile'] = fotoProfile;
   }
 
   final response = await http.put(
