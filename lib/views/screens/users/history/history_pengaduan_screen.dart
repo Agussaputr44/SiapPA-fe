@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siappa/views/widgets/tittle_custom_widget.dart';
 
 class HistoryPengaduanScreen extends StatelessWidget {
   const HistoryPengaduanScreen({Key? key}) : super(key: key);
@@ -6,16 +7,9 @@ class HistoryPengaduanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: const Text('History Pengaduan'),
-        backgroundColor: Colors.grey[200],
-        elevation: 0,
+     appBar: AppBar(
+        title: const TitleCustom(title: "Riwayat Pengaduan"),
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -33,30 +27,6 @@ class HistoryPengaduanScreen extends StatelessWidget {
               isProcessed: true,
             ),
             const SizedBox(height: 16),
-            _buildHistoryEntry(
-              context,
-              imagePath: 'assets/kekerasan_fisik.jpg',
-              name: 'Rina Sari',
-              address: 'Jl. Melati, Kelurahan Sejahtera',
-              violenceType: 'Kekerasan Fisik',
-              victim: 'Wanita Dewasa',
-              complaint: 'Rina melaporkan bahwa ia sering mendapatkan kekerasan fisik dari pasangannya. Hal ini terjadi berulang kali di rumah.',
-              hope: 'Perlindungan hukum dan konseling untuk korban.',
-              isProcessed: false,
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        color: const Color(0xFFF5A9B8),
-        height: 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
-            Icon(Icons.home, size: 30, color: Colors.white),
-            Icon(Icons.add, size: 30, color: Colors.white),
-            Icon(Icons.access_time, size: 30, color: Colors.white),
-            Icon(Icons.person, size: 30, color: Colors.white),
           ],
         ),
       ),
@@ -80,7 +50,7 @@ class HistoryPengaduanScreen extends StatelessWidget {
       child: Column(
         children: [
           const Image(
-            image: AssetImage('assets/placeholder.jpg'), // Replace with actual image path
+            image: AssetImage('assets/images/logo.png'), // Replace with actual image path
             height: 200,
             fit: BoxFit.cover,
           ),

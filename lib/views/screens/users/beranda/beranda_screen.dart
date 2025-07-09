@@ -1,80 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:siappa/views/widgets/custom_navbar_bottom.dart';
 
+import '../../../../utils/app_colors.dart';
+import '../../../widgets/tittle_custom_widget.dart';
 
-class BerandaScreen extends StatelessWidget {
-  const BerandaScreen({Key? key}) : super(key: key);
-
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(80.0),
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Color(0xFFF5A9B8),
-              borderRadius:
-                  BorderRadius.vertical(bottom: Radius.circular(20.0)),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.home,
-                    size: 40,
-                    color: Colors.white,
-                  ),
-                  const Text(
-                    'Home',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
+      appBar: AppBar(
+        title: const TitleCustom(title: "Beranda"),
+        automaticallyImplyLeading: false,
+      ),
+      body: Center(
+        child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Image(
-                image: AssetImage(
-                    'assets/images/logo.png'), // Replace with your asset path
-                height: 100,
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 0),
+                child: Image.asset(
+                  "assets/images/logo.png",
+                  height: 100,
+                  width: 130,
+                ),
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'Lindungi Merepuan dan anak Jadiilah Pelapor\nYang Memutus Mata Rantai Kekerasan Terhadap\nPerempuan Dan Anak',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 30),
+                child: const Text(
+                  'Panda (Pusat Aduan Anak Dan Perempuan) adalah sebuah aplikasi yang berguna untuk melakukan pengaduan kepada UPT PPA Kabupaten Bengkalis.',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    overflow: TextOverflow.clip
+                  ),
+                ),
               ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Icons.person, size: 40, color: Color(0xFFF5A9B8)),
-                  SizedBox(width: 16),
-                  Icon(Icons.favorite, size: 40, color: Color(0xFFF5A9B8)),
-                  SizedBox(width: 16),
-                  Icon(Icons.handshake, size: 40, color: Color(0xFFF5A9B8)),
-                  SizedBox(width: 16),
-                  Icon(Icons.group, size: 40, color: Color(0xFFF5A9B8)),
-                  SizedBox(width: 16),
-                  Icon(Icons.money, size: 40, color: Color(0xFFF5A9B8)),
-                ],
+              Container(
+                margin: const EdgeInsets.only(left: 0),
+                child: Image.asset(
+                  "assets/images/logo.png",
+                  height: 300,
+                  width: 300,
+                ),
               ),
-              const SizedBox(height: 32),
-              const SizedBox(height: 16),
-              const SizedBox(height: 16),
+              Container(
+                margin: const EdgeInsets.all(30),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Text(
+                  '“ Lindungi Perempuan dan Anak. Jadilah Pelopor Yang Memutus Mata Rantai Kekerasan Terhadap Perempuan Dan Anak ”',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Poppins',
+                    fontStyle: FontStyle.italic,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
-        bottomNavigationBar: NavBottom());
+      ),
+    );
   }
 }

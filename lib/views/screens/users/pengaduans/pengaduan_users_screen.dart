@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../../../widgets/tittle_custom_widget.dart';
 
-class PengaduanScreen extends StatelessWidget {
-  const PengaduanScreen({Key? key}) : super(key: key);
+
+class PengaduanUsersScreen extends StatelessWidget {
+  const PengaduanUsersScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pengaduan'),
-        backgroundColor: Colors.grey[200],
-        elevation: 0,
+       appBar: AppBar(
+        title: const TitleCustom(title: "Pengaduan"),
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -132,19 +133,6 @@ class PengaduanScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 18, color: Colors.white),
               ),
             ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        color: const Color(0xFFF5A9B8),
-        height: 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
-            Icon(Icons.home, size: 30, color: Colors.white),
-            Icon(Icons.add, size: 30, color: Colors.white),
-            Icon(Icons.access_time, size: 30, color: Colors.white),
-            Icon(Icons.person, size: 30, color: Colors.white),
           ],
         ),
       ),

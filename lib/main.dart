@@ -16,7 +16,10 @@ import 'package:siappa/views/screens/admins/users/users_screen.dart';
 import 'package:siappa/views/screens/auth/login_screen.dart';
 import 'package:siappa/views/screens/auth/register_screen.dart';
 import 'package:siappa/views/screens/users/beranda/beranda_screen.dart';
-import 'package:siappa/views/screens/users/pengaduans/pengaduan_screen.dart';
+import 'package:siappa/views/screens/users/history/history_pengaduan_screen.dart';
+import 'package:siappa/views/screens/users/pengaduans/pengaduan_users_screen.dart';
+import 'package:siappa/views/screens/users/profile/profile_users_screen.dart';
+import 'package:siappa/views/widgets/custom_navbar_bottom.dart';
 
 import 'providers/auth_provider.dart';
 import 'views/screens/splash/splash_screen.dart';
@@ -31,6 +34,9 @@ import 'views/screens/splash/splash_screen.dart';
 /// serta mengatur dependency provider dan routing utama aplikasi.
 ///
 
+void main(){
+  runApp(Main());
+}
 class Main extends StatelessWidget {
   const Main({Key? key}) : super(key: key);
 
@@ -62,10 +68,18 @@ class Main extends StatelessWidget {
           '/artikel/detail': (context) => const DetailArticleScreen(),
           '/artikel/add': (context) => const AddArticleScreen(),
           '/artikel/update': (context) => const UpdateArticleScreen(),
-          '/home': (context) => const BerandaScreen(),
-          '/pengaduan': (context) => const PengaduanScreen(),
-          // '/riwayat_pengaduan': (context) => const RiwayatPengaduan(),
-          // '/profile': (context) => const Profile(),
+
+
+
+
+
+
+          // users
+          '/home': (context) => const HomeScreen(),
+          '/pengaduan': (context) => const PengaduanUsersScreen(),
+          '/navbar': (context) => const NavBottom(),
+          '/profile/usrs': (context) => const ProfileUsersScreen(),
+          '/pengaduan/history': (context)=>HistoryPengaduanScreen()
         },
       ),
     );

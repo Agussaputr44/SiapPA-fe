@@ -88,19 +88,6 @@ class DetailArticleScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        color: const Color(0xFFF5A9B8),
-        height: 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
-            Icon(Icons.home, size: 30, color: Colors.white),
-            Icon(Icons.add, size: 30, color: Colors.white),
-            Icon(Icons.access_time, size: 30, color: Colors.white),
-            Icon(Icons.person, size: 30, color: Colors.white),
-          ],
-        ),
-      ),
     );
   }
 }

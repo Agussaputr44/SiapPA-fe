@@ -47,8 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (!mounted) return;
     if (authProvider.isAuthenticated) {
-      // Jika sudah login, langsung ke dashboard
-      Navigator.pushReplacementNamed(context, '/dashboard');
+      Navigator.pushReplacementNamed(context, '/navbar');
     } else {
       // Jika belum login, ke halaman login
       Navigator.pushReplacementNamed(context, '/login');

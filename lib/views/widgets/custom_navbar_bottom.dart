@@ -1,6 +1,11 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:siappa/views/screens/users/beranda/beranda_screen.dart';
+import 'package:siappa/views/screens/users/history/history_pengaduan_screen.dart';
+import 'package:siappa/views/screens/users/pengaduans/pengaduan_users_screen.dart';
+import 'package:siappa/views/screens/users/profile/profile_users_screen.dart';
 import '../../utils/app_colors.dart';
+
 
 class NavBottom extends StatefulWidget {
   const NavBottom({super.key});
@@ -10,44 +15,50 @@ class NavBottom extends StatefulWidget {
 }
 
 class _NavBottomState extends State<NavBottom> {
-  final List<String> _routes = [
-    '/home',
-    '/pengaduan',
-    '/history',
-    '/profile',
-  ];
-
   int _currentScreen = 0;
 
-  void _navigateTo(int index) {
-    setState(() {
-      _currentScreen = index;
-    });
-
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      _routes[index],
-      (route) => false, // optional: remove all previous routes
-    );
-  }
+  final List<Widget> _screens = const [
+    HomeScreen(),
+    PengaduanUsersScreen(),
+    HistoryPengaduanScreen(),
+    ProfileUsersScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.primary,
-      body: const SizedBox(), // Kosong karena konten muncul di routes
-      bottomNavigationBar: CurvedNavigationBar(
-        color: AppColors.secondary,
+    return WillPopScope(
+      onWillPop: () async {
+        if (_currentScreen != 0) {
+          setState(() {
+            _currentScreen = 0;
+          });
+          return false; 
+        }
+        return true; 
+      },
+      child: Scaffold(
         backgroundColor: AppColors.primary,
-        animationCurve: Curves.easeIn,
-        animationDuration: const Duration(milliseconds: 200),
-        onTap: _navigateTo,
-        items: const [
-          Icon(Icons.home, color: Colors.white),
-          Icon(Icons.add, color: Colors.white),
-          Icon(Icons.history, color: Colors.white),
-          Icon(Icons.people, color: Colors.white),
-        ],
+        body: IndexedStack(
+          index: _currentScreen,
+          children: _screens,
+        ),
+        bottomNavigationBar: CurvedNavigationBar(
+          color: AppColors.secondary,
+          animationCurve: Curves.easeIn,
+          animationDuration: const Duration(milliseconds: 200),
+          backgroundColor: AppColors.primary,
+          onTap: (index) {
+            setState(() {
+              _currentScreen = index;
+            });
+          },
+          items: const [
+            Icon(Icons.home, color: Colors.white),
+            Icon(Icons.add, color: Colors.white),
+            Icon(Icons.history, color: Colors.white),
+            Icon(Icons.people, color: Colors.white),
+          ],
+        ),
       ),
     );
   }

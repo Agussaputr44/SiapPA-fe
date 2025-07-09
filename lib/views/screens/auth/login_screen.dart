@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (!mounted) return;
       MessagesWidget.showSuccess(context, 'Login berhasil!');
-      Navigator.pushReplacementNamed(context, '/dashboard');
+      Navigator.pushReplacementNamed(context, '/navbar');
     } catch (e) {
       if (!mounted) return;
       MessagesWidget.showError(
@@ -92,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (!mounted) return;
       MessagesWidget.showSuccess(context, 'Login berhasil, selamat datang!');
-      Navigator.pushReplacementNamed(context, '/dashboard');
+      Navigator.pushReplacementNamed(context, '/navbar');
     } catch (e) {
       String errorMessage = "Terjadi kesalahan, silakan coba lagi.";
       if (e.toString().contains('sign_in_failed')) {
