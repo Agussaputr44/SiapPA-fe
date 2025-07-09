@@ -15,6 +15,8 @@ import 'package:siappa/views/screens/admins/profile/profile_screen.dart';
 import 'package:siappa/views/screens/admins/users/users_screen.dart';
 import 'package:siappa/views/screens/auth/login_screen.dart';
 import 'package:siappa/views/screens/auth/register_screen.dart';
+import 'package:siappa/views/screens/users/beranda/beranda_screen.dart';
+import 'package:siappa/views/screens/users/pengaduans/pengaduan_screen.dart';
 
 import 'providers/auth_provider.dart';
 import 'views/screens/splash/splash_screen.dart';
@@ -28,9 +30,6 @@ import 'views/screens/splash/splash_screen.dart';
 /// File ini menginisialisasi aplikasi dan membangun widget tree utama,
 /// serta mengatur dependency provider dan routing utama aplikasi.
 ///
-void main() {
-  runApp(const Main());
-}
 
 class Main extends StatelessWidget {
   const Main({Key? key}) : super(key: key);
@@ -63,8 +62,8 @@ class Main extends StatelessWidget {
           '/artikel/detail': (context) => const DetailArticleScreen(),
           '/artikel/add': (context) => const AddArticleScreen(),
           '/artikel/update': (context) => const UpdateArticleScreen(),
-          // '/home': (context) => const NavBottom(),
-          // '/pengaduan': (context) => const PengaduanPage(),
+          '/home': (context) => const BerandaScreen(),
+          '/pengaduan': (context) => const PengaduanScreen(),
           // '/riwayat_pengaduan': (context) => const RiwayatPengaduan(),
           // '/profile': (context) => const Profile(),
         },
