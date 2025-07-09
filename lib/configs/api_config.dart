@@ -22,11 +22,6 @@ class ApiConfig {
   /// Base URL API lengkap.
   static String get baseApiUrl => "$baseUrl/api/$apiVersion";
 
-  /// Base URL untuk resource gambar.
-
-  /// Base URL untuk resource profil (misal: foto profil user).
-  static String get baseImageUrlProfile => "$baseUrl/";
-
   // === Endpoint Auth ===
 
   /// Endpoint registrasi pengguna.

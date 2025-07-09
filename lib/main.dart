@@ -15,6 +15,7 @@ import 'package:siappa/views/screens/admins/profile/profile_screen.dart';
 import 'package:siappa/views/screens/admins/users/users_screen.dart';
 import 'package:siappa/views/screens/auth/login_screen.dart';
 import 'package:siappa/views/screens/auth/register_screen.dart';
+import 'package:siappa/views/screens/users/beranda/all_article_users_screen.dart';
 import 'package:siappa/views/screens/users/beranda/beranda_screen.dart';
 import 'package:siappa/views/screens/users/history/history_pengaduan_screen.dart';
 import 'package:siappa/views/screens/users/pengaduans/pengaduan_users_screen.dart';
@@ -23,6 +24,7 @@ import 'package:siappa/views/widgets/custom_navbar_bottom.dart';
 
 import 'providers/auth_provider.dart';
 import 'views/screens/splash/splash_screen.dart';
+import 'views/screens/users/beranda/detail_article_users_screen.dart';
 
 /// SiapPA - Sistem Informasi dan Aplikasi Pengaduan Perempuan dan Anak
 /// created by @Agussaputr44
@@ -76,9 +78,11 @@ class Main extends StatelessWidget {
 
           // users
           '/home': (context) => const HomeScreen(),
-          '/pengaduan': (context) => const PengaduanUsersScreen(),
+          '/users/artikel/detail': (context) => const DetailArticleUsersScreen(),
+          '/users/artikel/all': (context) => const AllArticleUsersScreen(),
+          '/users/pengaduan': (context) => const PengaduanUsersScreen(),
           '/navbar': (context) => const NavBottom(),
-          '/profile/usrs': (context) => const ProfileUsersScreen(),
+          '/users/profile': (context) => const ProfileUsersScreen(),
           '/pengaduan/history': (context)=>HistoryPengaduanScreen()
         },
       ),

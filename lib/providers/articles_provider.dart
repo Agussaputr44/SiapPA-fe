@@ -12,7 +12,7 @@ class ArticlesProvider with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-Map<String, dynamic>? _article;
+  Map<String, dynamic>? _article;
   Map<String, dynamic>? get article => _article;
 
   String? _successMessage;
@@ -88,7 +88,6 @@ Map<String, dynamic>? _article;
       notifyListeners();
     }
   }
-
 
   Future<void> updateArticle(
       int id, String judul, String isi, String foto) async {
