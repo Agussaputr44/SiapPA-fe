@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MaterialApp(
-    home: PengaduanScreen(),
-  ));
-}
 
 class PengaduanScreen extends StatelessWidget {
   const PengaduanScreen({Key? key}) : super(key: key);
