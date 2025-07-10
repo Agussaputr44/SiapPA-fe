@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:siappa/configs/api_config.dart';
 import 'package:siappa/models/articles_model.dart';
@@ -70,11 +71,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  child: const Text(
+                  child:  Text(
                     '" Lindungi Perempuan dan Anak. Jadilah Pelopor Yang Memutus Mata Rantai Kekerasan Terhadap Perempuan Dan Anak "',
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       color: Colors.white,
-                      fontFamily: 'Poppins',
                       fontStyle: FontStyle.italic,
                       fontSize: 13,
                       height: 1.5,
@@ -93,12 +93,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                           Text(
                             'Artikel Terbaru',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              fontFamily: 'Poppins',
                             ),
                           ),
                           TextButton(
@@ -108,9 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                             child: Text(
                               'Lihat Semua',
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                 color: AppColors.primary,
-                                fontFamily: 'Poppins',
                                 fontSize: 12,
                               ),
                             ),
@@ -134,10 +132,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (articlesProvider.articles.isEmpty) {
                             return Container(
                               padding: const EdgeInsets.all(20),
-                              child: const Text(
+                              child:  Text(
                                 'Belum ada artikel tersedia',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
+                                style: GoogleFonts.poppins(
+                            
                                   color: Colors.grey,
                                 ),
                                 textAlign: TextAlign.center,
@@ -235,10 +233,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       article.judul ?? 'Judul Tidak Tersedia',
-                      style: const TextStyle(
+                      style:  GoogleFonts.poppins(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        fontFamily: 'Poppins',
+                  
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -246,10 +244,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 5),
                     Text(
                       article.isi ?? 'Deskripsi tidak tersedia',
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: Colors.grey[600],
-                        fontFamily: 'Poppins',
+                  
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -265,10 +263,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(width: 5),
                         Text(
                           _formatDate(article.createdAt),
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 10,
                             color: Colors.grey[500],
-                            fontFamily: 'Poppins',
+                      
                           ),
                         ),
                       ],

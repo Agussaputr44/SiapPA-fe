@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:siappa/configs/api_config.dart';
 import '../../../../models/articles_model.dart';
@@ -11,8 +12,9 @@ class DetailArticleUsersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get article data from arguments
-    final ArticlesModel? article = ModalRoute.of(context)?.settings.arguments as ArticlesModel?;
-    
+    final ArticlesModel? article =
+        ModalRoute.of(context)?.settings.arguments as ArticlesModel?;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -21,11 +23,10 @@ class DetailArticleUsersScreen extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
+        title: Text(
           'Detail Artikel',
-          style: TextStyle(
+          style: GoogleFonts.poppins(
             color: Colors.black,
-            fontFamily: 'Poppins',
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -85,7 +86,7 @@ class DetailArticleUsersScreen extends StatelessWidget {
                       ),
               ),
             ),
-            
+
             // Article Content
             Padding(
               padding: const EdgeInsets.all(20.0),
@@ -95,16 +96,15 @@ class DetailArticleUsersScreen extends StatelessWidget {
                   // judul
                   Text(
                     article?.judul ?? 'Judul Artikel',
-                    style: const TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins',
                       color: Colors.black87,
                     ),
                   ),
-                  
+
                   const SizedBox(height: 12),
-                  
+
                   // Date and Author Info
                   Row(
                     children: [
@@ -116,10 +116,9 @@ class DetailArticleUsersScreen extends StatelessWidget {
                       const SizedBox(width: 5),
                       Text(
                         _formatDate(article?.createdAt),
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                           fontSize: 12,
                           color: Colors.grey[600],
-                          fontFamily: 'Poppins',
                         ),
                       ),
                       const SizedBox(width: 20),
@@ -131,17 +130,16 @@ class DetailArticleUsersScreen extends StatelessWidget {
                       const SizedBox(width: 5),
                       Text(
                         'Admin',
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                           fontSize: 12,
                           color: Colors.grey[600],
-                          fontFamily: 'Poppins',
                         ),
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // Content
                   Container(
                     width: double.infinity,
@@ -164,19 +162,18 @@ class DetailArticleUsersScreen extends StatelessWidget {
                         // const SizedBox(height: 16),
                         Text(
                           article?.isi ?? 'Konten artikel tidak tersedia.',
-                          style: const TextStyle(
+                          style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: 14,
-                            fontFamily: 'Poppins',
                             height: 1.6,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 30),
-                  
+
                   // Share Button (Full Width)
                   SizedBox(
                     width: double.infinity,
@@ -185,10 +182,9 @@ class DetailArticleUsersScreen extends StatelessWidget {
                         _shareArticle(context, article);
                       },
                       icon: const Icon(Icons.share, size: 20),
-                      label: const Text(
+                      label: Text(
                         'Bagikan Artikel',
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
+                        style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -204,9 +200,8 @@ class DetailArticleUsersScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 15),
-                  
                 ],
               ),
             ),
@@ -215,8 +210,9 @@ class DetailArticleUsersScreen extends StatelessWidget {
       ),
     );
   }
-  
-  Widget _buildShareOption(BuildContext context, IconData icon, String label, VoidCallback onTap) {
+
+  Widget _buildShareOption(
+      BuildContext context, IconData icon, String label, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
@@ -237,9 +233,8 @@ class DetailArticleUsersScreen extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               label,
-              style: const TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 12,
-                fontFamily: 'Poppins',
                 color: Colors.grey,
               ),
             ),
@@ -248,18 +243,28 @@ class DetailArticleUsersScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   String _formatDate(DateTime? date) {
     if (date == null) return 'Tanggal tidak tersedia';
-    
+
     final months = [
-      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember'
     ];
-    
+
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
-  
+
   void _shareArticle(BuildContext context, ArticlesModel? article) {
     if (article != null) {
       final String shareText = '''
@@ -269,14 +274,14 @@ ${article.isi}
 
 Dibagikan dari aplikasi SIAPPA - Sistem Informasi Aplikasi Perlindungan Perempuan dan Anak
       ''';
-      
+
       Share.share(
         shareText,
         subject: article.judul,
       );
     }
   }
-  
+
   void _copyToClipboard(BuildContext context, ArticlesModel? article) {
     if (article != null) {
       final String shareText = '''
@@ -286,7 +291,7 @@ ${article.isi}
 
 Dibagikan dari aplikasi SIAPPA
       ''';
-      
+
       Clipboard.setData(ClipboardData(text: shareText));
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -297,7 +302,7 @@ Dibagikan dari aplikasi SIAPPA
       );
     }
   }
-  
+
   void _shareViaMessage(BuildContext context, ArticlesModel? article) {
     if (article != null) {
       final String shareText = '''
@@ -307,14 +312,14 @@ ${article.isi}
 
 Dibagikan dari aplikasi SIAPPA
       ''';
-      
+
       Share.share(
         shareText,
         subject: article.judul,
       );
     }
   }
-  
+
   void _shareViaEmail(BuildContext context, ArticlesModel? article) {
     if (article != null) {
       final String shareText = '''
@@ -324,7 +329,7 @@ ${article.isi}
 
 Dibagikan dari aplikasi SIAPPA - Sistem Informasi Aplikasi Perlindungan Perempuan dan Anak
       ''';
-      
+
       Share.share(
         shareText,
         subject: 'Artikel: ${article.judul}',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 
 class DetailPengaduanScreen extends StatelessWidget {
@@ -40,9 +41,9 @@ class DetailPengaduanScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                         Text(
                           'Tia Monika Kasandra',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -68,29 +69,29 @@ class DetailPengaduanScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
+             Text(
               'Jl. Mawar, Kelurahan Damai',
-              style: TextStyle(fontSize: 16),
+              style: GoogleFonts.poppins(fontSize: 16),
             ),
             const SizedBox(height: 8),
-            const Text(
+             Text(
               'Kekerasan Seksual',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            const Text(
+             Text(
               'Korban  : Anak Perempuan',
-              style: TextStyle(fontSize: 16),
+              style: GoogleFonts.poppins(fontSize: 16),
             ),
             const SizedBox(height: 8),
-            const Text(
+             Text(
               'Aduan   : Tia sering terlhat memar di bagian lengan dan wajah. Setelah ditanya oleh tetangga, Ia mengaku sering dipukul oleh okeh ayahnya ketika melakuukan kesalahan kecil. Kejadian ini sudah berulang kali terjadi dan disaksikan oleh warga sekitar.',
-              style: TextStyle(fontSize: 16),
+              style: GoogleFonts.poppins(fontSize: 16),
             ),
             const SizedBox(height: 16),
-            const Text(
+             Text(
               'Harapan Korban: Penanganan hukum terhadap orang tua yang memukul anak-anak.',
-              style: TextStyle(fontSize: 16),
+              style: GoogleFonts.poppins(fontSize: 16),
             ),
             const SizedBox(height: 32),
             Row(

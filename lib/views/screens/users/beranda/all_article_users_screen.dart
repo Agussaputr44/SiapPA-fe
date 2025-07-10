@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:siappa/views/widgets/loading_widget.dart';
 
@@ -30,11 +31,10 @@ class AllArticleUsersScreen extends StatelessWidget {
           isLoading: isLoading,
           child: Scaffold(
             appBar: AppBar(
-              title: const Text(
+              title:  Text(
                 'Semua Artikel',
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   color: Colors.black,
-                  fontFamily: 'Poppins',
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -43,11 +43,10 @@ class AllArticleUsersScreen extends StatelessWidget {
               iconTheme: const IconThemeData(color: Colors.black),
             ),
             body: articles.isEmpty
-                ? const Center(
+                ?  Center(
                     child: Text(
                       'Belum ada artikel tersedia.',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
+                      style: GoogleFonts.poppins(
                         color: Colors.grey,
                       ),
                     ),
@@ -129,10 +128,9 @@ class AllArticleUsersScreen extends StatelessWidget {
                   children: [
                     Text(
                       article.judul ?? 'Judul Tidak Tersedia',
-                      style: const TextStyle(
+                      style:  GoogleFonts.poppins(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        fontFamily: 'Poppins',
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -140,10 +138,9 @@ class AllArticleUsersScreen extends StatelessWidget {
                     const SizedBox(height: 5),
                     Text(
                       article.isi ?? 'Deskripsi tidak tersedia',
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: Colors.grey[600],
-                        fontFamily: 'Poppins',
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -159,10 +156,9 @@ class AllArticleUsersScreen extends StatelessWidget {
                         const SizedBox(width: 5),
                         Text(
                           _formatDate(article.createdAt),
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 10,
                             color: Colors.grey[500],
-                            fontFamily: 'Poppins',
                           ),
                         ),
                       ],
