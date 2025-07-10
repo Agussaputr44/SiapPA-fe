@@ -5,6 +5,7 @@ class PengaduansModel {
   final String alamat;
   final String aduan;
   final String kategoriKekerasan;
+  final String korban;
   final String harapan;
   final List<String> evidencePaths;
   final DateTime createdAt; // ✅ Tambahkan ini
@@ -14,6 +15,7 @@ class PengaduansModel {
     required this.alamat,
     required this.aduan,
     required this.kategoriKekerasan,
+    required this.korban,
     required this.harapan,
     required this.evidencePaths,
     required this.createdAt, // ✅ Tambahkan ini
@@ -47,6 +49,7 @@ class PengaduansModel {
       alamat: json['alamat'] ?? '',
       aduan: json['aduan'] ?? '',
       kategoriKekerasan: json['kategoriKekerasan'] ?? '',
+      korban: json['korban'] ?? '',
       harapan: json['harapan'] ?? '',
       evidencePaths: parseStringList(json['evidencePaths']),
       createdAt: DateTime.tryParse(json['created_at'] ?? '') ?? DateTime.now(), // ✅ Parsing tanggal
@@ -59,6 +62,7 @@ class PengaduansModel {
       'alamat': alamat,
       'aduan': aduan,
       'kategoriKekerasan': kategoriKekerasan,
+      'korban': korban,
       'harapan': harapan,
       'evidencePaths': evidencePaths,
       'created_at': createdAt.toIso8601String(), // ✅ Export field

@@ -1,10 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 
 class MediaPreviewWidget extends StatefulWidget {
-  final String url;
-  const MediaPreviewWidget({Key? key, required this.url}) : super(key: key);
+  final String? url;
+  final File? file;
+
+  const MediaPreviewWidget({
+    Key? key,
+    this.url,
+    this.file,
+  }) : super(key: key);
 
   @override
   State<MediaPreviewWidget> createState() => _MediaPreviewWidgetState();
@@ -12,21 +20,34 @@ class MediaPreviewWidget extends StatefulWidget {
 
 class _MediaPreviewWidgetState extends State<MediaPreviewWidget> {
   VideoPlayerController? _controller;
-  bool get _isVideo =>
-      widget.url.toLowerCase().endsWith('.mp4') ||
-      widget.url.toLowerCase().endsWith('.mov') ||
-      widget.url.toLowerCase().endsWith('.avi');
+
+  bool get _isVideo {
+    final path = widget.file?.path ?? widget.url ?? "";
+    return path.toLowerCase().endsWith('.mp4') ||
+        path.toLowerCase().endsWith('.mov') ||
+        path.toLowerCase().endsWith('.avi');
+  }
 
   @override
   void initState() {
     super.initState();
+
     if (_isVideo) {
-      _controller = VideoPlayerController.networkUrl(Uri.parse(widget.url))
-        ..initialize().then((_) {
-          setState(() {});
-          _controller?.setLooping(true);
-          _controller?.play();
-        });
+      if (widget.file != null) {
+        _controller = VideoPlayerController.file(widget.file!)
+          ..initialize().then((_) {
+            setState(() {});
+            _controller?.setLooping(true);
+            _controller?.play();
+          });
+      } else if (widget.url != null) {
+        _controller = VideoPlayerController.networkUrl(Uri.parse(widget.url!))
+          ..initialize().then((_) {
+            setState(() {});
+            _controller?.setLooping(true);
+            _controller?.play();
+          });
+      }
     }
   }
 
@@ -56,7 +77,14 @@ class _MediaPreviewWidgetState extends State<MediaPreviewWidget> {
                     child: VideoPlayer(_controller!),
                   )
                 : const CircularProgressIndicator())
-            : Image.network(widget.url),
+            : widget.file != null
+                ? Image.file(widget.file!)
+                : widget.url != null
+                    ? Image.network(widget.url!)
+                    : const Text(
+                        "No media",
+                        style: TextStyle(color: Colors.white),
+                      ),
       ),
     );
   }

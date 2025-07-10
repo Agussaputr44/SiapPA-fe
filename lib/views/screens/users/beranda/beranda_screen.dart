@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:siappa/configs/api_config.dart';
 import 'package:siappa/models/articles_model.dart';
+import 'package:siappa/views/widgets/loading_widget.dart';
 import '../../../../providers/articles_provider.dart';
 import '../../../../providers/auth_provider.dart';
 import '../../../../utils/app_colors.dart';
@@ -32,138 +33,141 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const TitleCustom(title: "Beranda"),
-        automaticallyImplyLeading: false,
-      ),
-      body:  SingleChildScrollView(
-          child: Column(
-            children: [
-              // Logo Section
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Image.asset(
-                  "assets/images/logo.png",
-                  height: 120,
-                  width: 150,
-                ),
-              ),
-
-              // Quote Section
-              Container(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: const Text(
-                  '" Lindungi Perempuan dan Anak. Jadilah Pelopor Yang Memutus Mata Rantai Kekerasan Terhadap Perempuan Dan Anak "',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Poppins',
-                    fontStyle: FontStyle.italic,
-                    fontSize: 13,
-                    height: 1.5,
+    return LoadingWidget(
+      isLoading: ArticlesProvider().isLoading,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const TitleCustom(title: "Beranda"),
+          automaticallyImplyLeading: false,
+        ),
+        body:  SingleChildScrollView(
+            child: Column(
+              children: [
+                // Logo Section
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Image.asset(
+                    "assets/images/logo.png",
+                    height: 120,
+                    width: 150,
                   ),
-                  textAlign: TextAlign.center,
                 ),
-              ),
-
-              // Articles Section
-              Container(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Artikel Terbaru',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Poppins',
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            // Navigate to all articles page
-                            Navigator.pushNamed(context, '/users/artikel/all');
-                          },
-                          child: Text(
-                            'Lihat Semua',
+      
+                // Quote Section
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: const Text(
+                    '" Lindungi Perempuan dan Anak. Jadilah Pelopor Yang Memutus Mata Rantai Kekerasan Terhadap Perempuan Dan Anak "',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Poppins',
+                      fontStyle: FontStyle.italic,
+                      fontSize: 13,
+                      height: 1.5,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+      
+                // Articles Section
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Artikel Terbaru',
                             style: TextStyle(
-                              color: AppColors.primary,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                               fontFamily: 'Poppins',
-                              fontSize: 12,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-
-                    // Article List
-                    Consumer<ArticlesProvider>(
-                      builder: (context, articlesProvider, child) {
-                        if (articlesProvider.isLoading) {
-                          return const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(20),
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        }
-
-                        if (articlesProvider.articles.isEmpty) {
-                          return Container(
-                            padding: const EdgeInsets.all(20),
-                            child: const Text(
-                              'Belum ada artikel tersedia',
+                          TextButton(
+                            onPressed: () {
+                              // Navigate to all articles page
+                              Navigator.pushNamed(context, '/users/artikel/all');
+                            },
+                            child: Text(
+                              'Lihat Semua',
                               style: TextStyle(
+                                color: AppColors.primary,
                                 fontFamily: 'Poppins',
-                                color: Colors.grey,
+                                fontSize: 12,
                               ),
-                              textAlign: TextAlign.center,
                             ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 15),
+      
+                      // Article List
+                      Consumer<ArticlesProvider>(
+                        builder: (context, articlesProvider, child) {
+                          if (articlesProvider.isLoading) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(20),
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          }
+      
+                          if (articlesProvider.articles.isEmpty) {
+                            return Container(
+                              padding: const EdgeInsets.all(20),
+                              child: const Text(
+                                'Belum ada artikel tersedia',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.grey,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            );
+                          }
+      
+                          // Show only first 5 articles for home screen
+                          final displayedArticles =
+                              articlesProvider.articles.take(5).toList();
+      
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: displayedArticles.length,
+                            itemBuilder: (context, index) {
+                              final article = displayedArticles[index];
+                              return _buildArticleCard(article);
+                            },
                           );
-                        }
-
-                        // Show only first 5 articles for home screen
-                        final displayedArticles =
-                            articlesProvider.articles.take(5).toList();
-
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: displayedArticles.length,
-                          itemBuilder: (context, index) {
-                            final article = displayedArticles[index];
-                            return _buildArticleCard(article);
-                          },
-                        );
-                      },
-                    ),
-                  ],
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      );
+    );
   }
 
   Widget _buildArticleCard(ArticlesModel article) {
