@@ -71,6 +71,7 @@ class ApiConfig {
   /// Endpoint mengambil daftar pengaduan.
   static const String pengaduans = "/pengaduans";
   static  String pengaduanUpdate(int? id) => "/pengaduans/$id";
+  static  String pengaduanUpdateStatus(int? id) => "/pengaduans/status/$id";
    static String pengaduanDelete(int? id) => "/pengaduans/$id";
   static const String my_pengaduans = "/pengaduans/my-pengaduans";
 

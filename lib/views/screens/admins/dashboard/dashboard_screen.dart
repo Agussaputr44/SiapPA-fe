@@ -28,8 +28,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       final usersProvider = Provider.of<UsersProvider>(context, listen: false);
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final articlesProvider = Provider.of<ArticlesProvider>(context, listen: false);
-      final pengaduansProvider =
-          Provider.of<PengaduansProvider>(context, listen: false);
+      final pengaduansProvider = Provider.of<PengaduansProvider>(context, listen: false);
 
       usersProvider.loadUserDetails(authProvider);
       usersProvider.loadAllUsers(authProvider);
@@ -81,8 +80,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             title: 'Laporan',
                             count: '${pengaduans.length} Laporan',
                             iconAsset: 'assets/icons/laporan.png',
-                            onTap: () =>
-                                Navigator.of(context).pushNamed('/laporan'),
+                            onTap: () => Navigator.of(context).pushNamed('/laporan'),
                             background: CardBgType.circleTopLeft,
                             detailColor: const Color(0xFFF48FB1),
                           ),
@@ -93,8 +91,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             title: 'Artikel',
                             count: '${articles.length} Artikel',
                             iconAsset: 'assets/icons/artikel.png',
-                            onTap: () =>
-                                Navigator.of(context).pushNamed('/artikel'),
+                            onTap: () => Navigator.of(context).pushNamed('/artikel'),
                             background: CardBgType.circleTopLeft,
                             detailColor: const Color(0xFFF48FB1),
                           ),
@@ -139,60 +136,79 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 5.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
                         ReportCard(
                           imageAsset: 'assets/icons/ic_fisik.png',
                           title: 'Kekerasan Fisik',
-                          subtitle:
-                              '${countByCategory(pengaduans, 'kekerasan_fisik')} Laporan',
-                          additionalCount:
-                              countByCategory(pengaduans, 'kekerasan_fisik'),
+                          subtitle: '${countByCategory(pengaduans, 'kekerasan_fisik')} Laporan',
+                          additionalCount: countByCategory(pengaduans, 'kekerasan_fisik'),
                           color: const Color(0xFFE57373),
-                          onDetail: () {},
+                          onDetail: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/users/pengaduan/by_category',
+                              arguments: 'kekerasan_fisik',
+                            );
+                          },
                         ),
                         ReportCard(
                           imageAsset: 'assets/icons/ic_psikis.png',
                           title: 'Kekerasan Psikis',
-                          subtitle:
-                              '${countByCategory(pengaduans, 'kekerasan_psikis')} Laporan',
-                          additionalCount:
-                              countByCategory(pengaduans, 'kekerasan_psikis'),
+                          subtitle: '${countByCategory(pengaduans, 'kekerasan_psikis')} Laporan',
+                          additionalCount: countByCategory(pengaduans, 'kekerasan_psikis'),
                           color: const Color(0xFF7986CB),
-                          onDetail: () {},
+                          onDetail: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/users/pengaduan/by_category',
+                              arguments: 'kekerasan_psikis',
+                            );
+                          },
                         ),
                         ReportCard(
                           imageAsset: 'assets/icons/ic_seksual.png',
                           title: 'Kekerasan Seksual',
-                          subtitle:
-                              '${countByCategory(pengaduans, 'kekerasan_seksual')} Laporan',
-                          additionalCount:
-                              countByCategory(pengaduans, 'kekerasan_seksual'),
+                          subtitle: '${countByCategory(pengaduans, 'kekerasan_seksual')} Laporan',
+                          additionalCount: countByCategory(pengaduans, 'kekerasan_seksual'),
                           color: const Color(0xFFD81B60),
-                          onDetail: () {},
+                          onDetail: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/users/pengaduan/by_category',
+                              arguments: 'kekerasan_seksual',
+                            );
+                          },
                         ),
                         ReportCard(
                           imageAsset: 'assets/icons/ic_ekonomi.png',
                           title: 'Kekerasan Ekonomi',
-                          subtitle:
-                              '${countByCategory(pengaduans, 'kekerasan_ekonomi')} Laporan',
-                          additionalCount:
-                              countByCategory(pengaduans, 'kekerasan_ekonomi'),
+                          subtitle: '${countByCategory(pengaduans, 'kekerasan_ekonomi')} Laporan',
+                          additionalCount: countByCategory(pengaduans, 'kekerasan_ekonomi'),
                           color: const Color.fromARGB(255, 40, 216, 27),
-                          onDetail: () {},
+                          onDetail: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/users/pengaduan/by_category',
+                              arguments: 'kekerasan_ekonomi',
+                            );
+                          },
                         ),
                         ReportCard(
                           imageAsset: 'assets/icons/ic_sosial.png',
                           title: 'Kekerasan Sosial',
-                          subtitle:
-                              '${countByCategory(pengaduans, 'kekerasan_sosial')} Laporan',
-                          additionalCount:
-                              countByCategory(pengaduans, 'kekerasan_sosial'),
+                          subtitle: '${countByCategory(pengaduans, 'kekerasan_sosial')} Laporan',
+                          additionalCount: countByCategory(pengaduans, 'kekerasan_sosial'),
                           color: const Color.fromARGB(255, 27, 71, 216),
-                          onDetail: () {},
+                          onDetail: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/users/pengaduan/by_category',
+                              arguments: 'kekerasan_sosial',
+                            );
+                          },
                         ),
                       ],
                     ),

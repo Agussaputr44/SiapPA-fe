@@ -41,30 +41,38 @@ class _LoginScreenState extends State<LoginScreen> {
     if (value.length < 8) return 'Password minimal 8 karakter';
     return null;
   }
+Future<void> _handleLogin() async {
+  final form = _formKey.currentState;
+  if (form == null || !form.validate()) return;
 
-  Future<void> _handleLogin() async {
-    final form = _formKey.currentState;
-    if (form == null || !form.validate()) return;
+  setState(() => _isLoading = true);
+  try {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    await authProvider.login(
+      _emailController.text.trim(),
+      _passwordController.text.trim(),
+    );
 
-    setState(() => _isLoading = true);
-    try {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      await authProvider.login(
-        _emailController.text.trim(),
-        _passwordController.text.trim(),
-      );
+    if (!mounted) return;
 
-      if (!mounted) return;
-      MessagesWidget.showSuccess(context, 'Login berhasil!');
+    MessagesWidget.showSuccess(context, 'Login berhasil!');
+
+    if (authProvider.isAdmin) {
+      Navigator.pushReplacementNamed(context, '/dashboard');
+    } else {
       Navigator.pushReplacementNamed(context, '/navbar');
-    } catch (e) {
-      if (!mounted) return;
-      MessagesWidget.showError(
-          context, e.toString().replaceFirst('Exception: ', ''));
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
     }
+  } catch (e) {
+    if (!mounted) return;
+    MessagesWidget.showError(
+      context,
+      e.toString().replaceFirst('Exception: ', ''),
+    );
+  } finally {
+    if (mounted) setState(() => _isLoading = false);
   }
+}
+
 
   Future<void> _handleGoogleSignIn() async {
     setState(() => _isLoading = true);

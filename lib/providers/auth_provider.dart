@@ -26,8 +26,24 @@ class AuthProvider with ChangeNotifier {
   /// True if user is authenticated (token is not null)
   bool get isAuthenticated => _token != null;
 
+  String? _role;
+  String? get role => _role;
+
+  bool get isAdmin => _role == 'admin';
+
   AuthProvider() {
+    loadRole();
     loadToken();
+  }
+
+  Future<void> _setRole(String role) async {
+    await _storage.write(key: 'user_role', value: role);
+  }
+
+  Future<String?> loadRole() async {
+    _role = await _storage.read(key: 'user_role');
+    notifyListeners();
+    return _role;
   }
 
   /// Login with Google and store token
@@ -37,7 +53,9 @@ class AuthProvider with ChangeNotifier {
     try {
       final token = await _authService.loginWithGoogle(idToken);
       _token = token;
+       _role = 'users';
       await _setToken(token);
+      await _setRole(_role!);
       notifyListeners();
     } catch (e, stack) {
       throw Exception('Login dengan Google gagal: $e');
@@ -48,21 +66,32 @@ class AuthProvider with ChangeNotifier {
   }
 
   /// Login with email and password
-  Future<void> login(String email, String password) async {
-    _isLoading = true;
-    notifyListeners();
-    try {
-      final token = await _authService.login(email, password);
-      _token = token;
-      await _setToken(token);
-      notifyListeners();
-    } catch (e, stack) {
-      throw Exception('Login gagal: $e');
-    } finally {
-      _isLoading = false;
-      notifyListeners();
+Future<void> login(String email, String password) async {
+  _isLoading = true;
+  notifyListeners();
+
+  try {
+    final result = await _authService.login(email, password);
+
+    _token = result['token'];
+    _role = result['role'];
+
+    if (_token == null || _role == null) {
+      throw Exception('Login gagal: token atau role null.');
     }
+
+    await _setToken(_token!);
+    await _setRole(_role!);
+    notifyListeners();
+  } catch (e) {
+    print("❌ AuthProvider login error: $e");
+    throw Exception('Login gagal: $e');
+  } finally {
+    _isLoading = false;
+    notifyListeners();
   }
+}
+
 
   /// Register with name, email, and password
   Future<bool> register(String name, String email, String password) async {
@@ -86,14 +115,16 @@ class AuthProvider with ChangeNotifier {
   }
 
   /// Update user password
-  Future<bool> updatePassword(String currentPassword, String newPassword) async {
+  Future<bool> updatePassword(
+      String currentPassword, String newPassword) async {
     _isLoading = true;
     _successMessage = null;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final message = await _authService.updatePassword(currentPassword, newPassword);
+      final message =
+          await _authService.updatePassword(currentPassword, newPassword);
       _successMessage = message;
       _isLoading = false;
       notifyListeners();
@@ -115,9 +146,10 @@ class AuthProvider with ChangeNotifier {
       if (_token != null) {
         await _authService.logout(_token!);
       }
-
       _token = null;
+      _role = null;
       await _storage.delete(key: 'auth_token');
+      await _storage.delete(key: 'user_role');
       notifyListeners();
     } catch (e, stack) {
       throw Exception('Gagal logout: $e');

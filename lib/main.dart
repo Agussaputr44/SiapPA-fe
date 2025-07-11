@@ -26,6 +26,7 @@ import 'package:siappa/views/widgets/custom_navbar_bottom.dart';
 import 'providers/auth_provider.dart';
 import 'views/screens/splash/splash_screen.dart';
 import 'views/screens/users/beranda/detail_article_users_screen.dart';
+import 'views/screens/users/beranda/pengaduan_by_category.dart';
 
 /// SiapPA - Sistem Informasi dan Aplikasi Pengaduan Perempuan dan Anak
 /// created by @Agussaputr44
@@ -71,12 +72,7 @@ class Main extends StatelessWidget {
           '/artikel/detail': (context) => const DetailArticleScreen(),
           '/artikel/add': (context) => const AddArticleScreen(),
           '/artikel/update': (context) => const UpdateArticleScreen(),
-
-
-
-
-
-
+          '/users/pengaduan/by_category': (context) => const PengaduanByCategoryScreen(),
           // users
           '/home': (context) => const HomeScreen(),
           '/users/artikel/detail': (context) => const DetailArticleUsersScreen(),

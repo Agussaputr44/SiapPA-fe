@@ -159,4 +159,57 @@ Future<void> updatePengaduan({
   if (response.statusCode != 200 && response.statusCode != 204) {
     throw Exception('Failed to update pengaduan: ${response.statusCode}');
   }
-}}
+}
+Future<void> updatePengaduanStatus({
+    required String? token,
+    required String id,
+    required String status,
+  }) async {
+    int? parsedId = int.tryParse(id);
+    if (parsedId == null) {
+      throw Exception('Invalid pengaduan ID: $id');
+    }
+
+    final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.pengaduanUpdateStatus(parsedId)));
+
+    print('Request URL for status update: $url');
+    print('Token: $token');
+    print('Status: $status');
+
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'status': status,
+      }),
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response headers: ${response.headers}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 302) {
+      print('Redirect location: ${response.headers['location']}');
+    }
+
+    if (response.statusCode != 200 && response.statusCode != 204) {
+      String message = 'Failed to update status: ${response.statusCode}';
+      try {
+        final errorData = jsonDecode(response.body);
+        if (errorData is Map && errorData.containsKey('message')) {
+          message += ': ${errorData['message']}';
+        } else if (errorData is Map) {
+          message += ': ${errorData.values.join(', ')}';
+        } else {
+          message += ': ${response.body}';
+        }
+      } catch (_) {
+        message += ': ${response.body}';
+      }
+      throw Exception(message);
+    }
+  }
+}

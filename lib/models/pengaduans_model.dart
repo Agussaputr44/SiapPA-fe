@@ -8,9 +8,9 @@ class PengaduansModel {
   final String kategoriKekerasan;
   final String korban;
   final String harapan;
-  final String status;
+   String status;
   final List<String> evidencePaths;
-  final DateTime createdAt; // ✅ Tambahkan ini
+  final DateTime createdAt; 
 
   PengaduansModel({
     required this.id,
@@ -22,13 +22,12 @@ class PengaduansModel {
     required this.harapan,
     required this.status,
     required this.evidencePaths,
-    required this.createdAt, // ✅ Tambahkan ini
+    required this.createdAt, 
   });
 
   static List<String> parseStringList(dynamic value) {
     try {
       if (value == null) return [];
-
       if (value is String) {
         final decoded = jsonDecode(value);
         if (decoded is List) {

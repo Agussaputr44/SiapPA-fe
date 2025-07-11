@@ -40,16 +40,21 @@ class _SplashScreenState extends State<SplashScreen> {
   /// Navigasi otomatis ke dashboard jika sudah login, atau ke login jika belum.
   Future<void> _checkAuth() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    await authProvider.loadToken();
 
-    // Delay untuk menampilkan splash animasi/logo
+    await authProvider.loadToken();
+    await authProvider.loadRole();
+
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
+
     if (authProvider.isAuthenticated) {
-      Navigator.pushReplacementNamed(context, '/navbar');
+      if (authProvider.isAdmin) {
+        Navigator.pushReplacementNamed(context, '/dashboard');
+      } else {
+        Navigator.pushReplacementNamed(context, '/navbar');
+      }
     } else {
-      // Jika belum login, ke halaman login
       Navigator.pushReplacementNamed(context, '/login');
     }
   }

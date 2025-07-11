@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:siappa/models/pengaduans_model.dart';
 import 'package:siappa/providers/auth_provider.dart';
 import 'package:siappa/services/pengaduans_service.dart';
+import 'package:flutter/foundation.dart'; // For debugPrint
 
 class PengaduansProvider with ChangeNotifier {
   final PengaduansService _pengaduansService = PengaduansService();
@@ -41,7 +42,6 @@ class PengaduansProvider with ChangeNotifier {
     }
   }
 
-
   Future<void> deleteArticle(int? id) async {
     _isLoading = true;
     _successMessage = null;
@@ -59,6 +59,7 @@ class PengaduansProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
   Future<void> addPengaduan({
     required String namaKorban,
     required String alamat,
@@ -76,7 +77,6 @@ class PengaduansProvider with ChangeNotifier {
 
     try {
       final token = await authProvider.token;
-
       final message = await _pengaduansService.addPengaduan(
         token: token,
         namaKorban: namaKorban,
@@ -121,54 +121,88 @@ class PengaduansProvider with ChangeNotifier {
     }
   }
 
- Future<void> updatePengaduan({
-  required String id,
-  required String namaKorban,
-  required String alamat,
-  required String aduan,
-  required String kategoriKekerasan,
-  required String korban,
-  required String harapan,
-  String? status,
-  required List<String> evidencePaths,
-}) async {
-  _isLoading = true;
-  _successMessage = null;
-  _errorMessage = null;
-  notifyListeners();
-
-  try {
-    final token = await authProvider.token;
-    if (token == null) {
-      throw Exception('Authentication token is missing');
-    }
-
-    // Parse id to int if required by PengaduansService
-    int? parsedId = int.tryParse(id);
-    if (parsedId == null) {
-      throw Exception('Invalid pengaduan ID: $id');
-    }
-
-    final message = await _pengaduansService.updatePengaduan(
-      token: token,
-      id: id, // Pass as String to match PengaduansService
-      namaKorban: namaKorban,
-      alamat: alamat,
-      aduan: aduan,
-      kategoriKekerasan: kategoriKekerasan,
-      korban: korban,
-      harapan: harapan,
-      // status: status,
-      evidencePaths: evidencePaths,
-    );
-    // _successMessage = message;
-  } catch (e) {
-    _errorMessage = e.toString();
-    debugPrint('Error updating pengaduan: $e');
-  } finally {
-    _isLoading = false;
+  Future<void> updatePengaduan({
+    required String id,
+    required String namaKorban,
+    required String alamat,
+    required String aduan,
+    required String kategoriKekerasan,
+    required String korban,
+    required String harapan,
+    String? status,
+    required List<String> evidencePaths,
+  }) async {
+    _isLoading = true;
+    _successMessage = null;
+    _errorMessage = null;
     notifyListeners();
+
+    try {
+      final token = await authProvider.token;
+      if (token == null) {
+        throw Exception('Authentication token is missing');
+      }
+
+      // Parse id to int if required by PengaduansService
+      int? parsedId = int.tryParse(id);
+      if (parsedId == null) {
+        throw Exception('Invalid pengaduan ID: $id');
+      }
+
+      await _pengaduansService.updatePengaduan(
+        token: token,
+        id: id,
+        namaKorban: namaKorban,
+        alamat: alamat,
+        aduan: aduan,
+        kategoriKekerasan: kategoriKekerasan,
+        korban: korban,
+        harapan: harapan,
+        evidencePaths: evidencePaths,
+      );
+      _successMessage = 'Pengaduan berhasil diperbarui';
+    } catch (e) {
+      _errorMessage = 'Gagal memperbarui pengaduan: $e';
+      debugPrint('Error updating pengaduan: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
-}
-  
+
+  Future<void> updatePengaduanStatus({
+    required String id,
+    required String status,
+  }) async {
+    _isLoading = true;
+    _successMessage = null;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final token = await authProvider.token;
+      if (token == null) {
+        throw Exception('Authentication token is missing');
+      }
+
+      // Parse id to int if required by PengaduansService
+      int? parsedId = int.tryParse(id);
+      if (parsedId == null) {
+        throw Exception('Invalid pengaduan ID: $id');
+      }
+
+      await _pengaduansService.updatePengaduanStatus(
+        token: token,
+        id: id,
+        status: status,
+      );
+      _successMessage = 'Status pengaduan berhasil diperbarui';
+    } catch (e) {
+      _errorMessage = 'Gagal memperbarui status: $e';
+      debugPrint('Error updating pengaduan status: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }
