@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts
-import 'package:intl/intl.dart';                 // Import Intl untuk format tanggal
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:siappa/configs/api_config.dart';
 import 'package:siappa/providers/auth_provider.dart';
@@ -8,7 +8,7 @@ import 'package:siappa/providers/pengaduans_provider.dart';
 import 'package:siappa/views/screens/users/history/detail_pengaduan_screen.dart';
 import 'package:siappa/views/widgets/tittle_custom_widget.dart';
 import '../../../../models/pengaduans_model.dart';
-import '../../../../utils/app_colors.dart'; 
+import '../../../../utils/app_colors.dart';
 
 class HistoryPengaduanScreen extends StatefulWidget {
   const HistoryPengaduanScreen({Key? key}) : super(key: key);
@@ -39,7 +39,8 @@ class _HistoryPengaduanScreenState extends State<HistoryPengaduanScreen> {
       case 'kekerasan_fisik':
         return _CategoryInfo('Kekerasan Fisik', Icons.sports_kabaddi);
       case 'kekerasan_seksual':
-        return _CategoryInfo('Kekerasan Seksual', Icons.report_problem_outlined);
+        return _CategoryInfo(
+            'Kekerasan Seksual', Icons.report_problem_outlined);
       case 'kekerasan_psikis':
         return _CategoryInfo('Kekerasan Psikis', Icons.psychology_alt);
       case 'kekerasan_ekonomi':
@@ -70,14 +71,15 @@ class _HistoryPengaduanScreenState extends State<HistoryPengaduanScreen> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              final authProvider = Provider.of<AuthProvider>(context, listen: false);
+              final authProvider =
+                  Provider.of<AuthProvider>(context, listen: false);
               Provider.of<PengaduansProvider>(context, listen: false)
                   .loadMyPengaduans(authProvider);
             },
           ),
         ],
       ),
-      backgroundColor: Colors.grey[100], 
+      backgroundColor: Colors.grey[100],
       body: Consumer<PengaduansProvider>(
         builder: (context, pengaduanProvider, child) {
           if (pengaduanProvider.isLoading) {
@@ -132,13 +134,13 @@ class _HistoryPengaduanScreenState extends State<HistoryPengaduanScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: () {
-          // Navigasi ke halaman detail saat kartu di-klik (SUDAH DIAKTIFKAN)
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => DetailPengaduanScreen(pengaduan: pengaduan),
-          //   ),
-          // );
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => DetailPengaduanScreen(
+                pengaduan: pengaduan,
+              ),
+            ),
+          );
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,23 +149,23 @@ class _HistoryPengaduanScreenState extends State<HistoryPengaduanScreen> {
               Container(
                 height: 180,
                 width: double.infinity,
-                color: Colors.grey[200], 
+                color: Colors.grey[200],
                 child: _isImageUrl(firstMediaUrl)
                     ? Image.network(
-                      ApiConfig.baseUrl+
-                        firstMediaUrl,
+                        ApiConfig.baseUrl + firstMediaUrl,
                         fit: BoxFit.cover,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) return child;
-                          return const Center(child: CircularProgressIndicator());
+                          return const Center(
+                              child: CircularProgressIndicator());
                         },
                         errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.broken_image, size: 40, color: Colors.grey);
+                          return const Icon(Icons.broken_image,
+                              size: 40, color: Colors.grey);
                         },
                       )
-                    : const Icon(Icons.videocam, size: 60, color: Colors.grey), 
+                    : const Icon(Icons.videocam, size: 60, color: Colors.grey),
               ),
-
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -175,7 +177,8 @@ class _HistoryPengaduanScreenState extends State<HistoryPengaduanScreen> {
                     children: [
                       // Chip untuk Kategori Kekerasan
                       Chip(
-                        avatar: Icon(categoryInfo.icon, size: 18, color: AppColors.primary),
+                        avatar: Icon(categoryInfo.icon,
+                            size: 18, color: AppColors.primary),
                         label: Text(
                           categoryInfo.text,
                           style: GoogleFonts.poppins(
@@ -219,7 +222,8 @@ class _HistoryPengaduanScreenState extends State<HistoryPengaduanScreen> {
                   // Tanggal Pengaduan
                   Row(
                     children: [
-                      Icon(Icons.calendar_today, size: 14, color: Colors.grey[600]),
+                      Icon(Icons.calendar_today,
+                          size: 14, color: Colors.grey[600]),
                       const SizedBox(width: 6),
                       Text(
                         // Format tanggal menjadi "10 Juli 2025"

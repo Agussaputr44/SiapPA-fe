@@ -4,6 +4,7 @@ class PengaduansModel {
   final String namaKorban;
   final String alamat;
   final String aduan;
+  final int id;
   final String kategoriKekerasan;
   final String korban;
   final String harapan;
@@ -12,6 +13,7 @@ class PengaduansModel {
   final DateTime createdAt; // ✅ Tambahkan ini
 
   PengaduansModel({
+    required this.id,
     required this.namaKorban,
     required this.alamat,
     required this.aduan,
@@ -23,7 +25,7 @@ class PengaduansModel {
     required this.createdAt, // ✅ Tambahkan ini
   });
 
-    static List<String> parseStringList(dynamic value) {
+  static List<String> parseStringList(dynamic value) {
     try {
       if (value == null) return [];
 
@@ -47,6 +49,7 @@ class PengaduansModel {
 
   factory PengaduansModel.fromJson(Map<String, dynamic> json) {
     return PengaduansModel(
+      id: int.tryParse(json['id'].toString()) ?? 0,
       namaKorban: json['namaKorban'] ?? '',
       alamat: json['alamat'] ?? '',
       aduan: json['aduan'] ?? '',
@@ -55,12 +58,13 @@ class PengaduansModel {
       harapan: json['harapan'] ?? '',
       status: json['status'] ?? '',
       evidencePaths: parseStringList(json['evidencePaths']),
-      createdAt: DateTime.tryParse(json['created_at'] ?? '') ?? DateTime.now(), // ✅ Parsing tanggal
+      createdAt: DateTime.tryParse(json['created_at'] ?? '') ?? DateTime.now(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      "id": id,
       'namaKorban': namaKorban,
       'alamat': alamat,
       'aduan': aduan,

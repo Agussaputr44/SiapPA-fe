@@ -60,8 +60,7 @@ class ApiConfig {
 
   /// Endpoint detail artikel berdasarkan [id].
   static String artikelDetail(int id) => "/artikels/$id";
-  static String artikelUpdate(int id) => "/artikels/$id";
-
+  static String artikelUpdate(int? id) => "/artikels/$id";
 
   static String artikelDelete(int id) => "/artikels/$id";
 
@@ -71,6 +70,8 @@ class ApiConfig {
 
   /// Endpoint mengambil daftar pengaduan.
   static const String pengaduans = "/pengaduans";
+  static  String pengaduanUpdate(int? id) => "/pengaduans/$id";
+   static String pengaduanDelete(int? id) => "/pengaduans/$id";
   static const String my_pengaduans = "/pengaduans/my-pengaduans";
 
   /// Endpoint detail pengaduan berdasarkan [id].

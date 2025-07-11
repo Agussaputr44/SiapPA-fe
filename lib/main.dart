@@ -17,6 +17,7 @@ import 'package:siappa/views/screens/auth/login_screen.dart';
 import 'package:siappa/views/screens/auth/register_screen.dart';
 import 'package:siappa/views/screens/users/beranda/all_article_users_screen.dart';
 import 'package:siappa/views/screens/users/beranda/beranda_screen.dart';
+import 'package:siappa/views/screens/users/history/detail_pengaduan_screen.dart';
 import 'package:siappa/views/screens/users/history/history_pengaduan_screen.dart';
 import 'package:siappa/views/screens/users/pengaduans/pengaduan_users_screen.dart';
 import 'package:siappa/views/screens/users/profile/profile_users_screen.dart';

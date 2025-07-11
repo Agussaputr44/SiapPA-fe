@@ -41,6 +41,24 @@ class PengaduansProvider with ChangeNotifier {
     }
   }
 
+
+  Future<void> deleteArticle(int? id) async {
+    _isLoading = true;
+    _successMessage = null;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final token = await authProvider.token;
+      final message = await _pengaduansService.deletePengaduan(token, id);
+      _successMessage = message;
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
   Future<void> addPengaduan({
     required String namaKorban,
     required String alamat,
@@ -102,4 +120,55 @@ class PengaduansProvider with ChangeNotifier {
       }
     }
   }
+
+ Future<void> updatePengaduan({
+  required String id,
+  required String namaKorban,
+  required String alamat,
+  required String aduan,
+  required String kategoriKekerasan,
+  required String korban,
+  required String harapan,
+  String? status,
+  required List<String> evidencePaths,
+}) async {
+  _isLoading = true;
+  _successMessage = null;
+  _errorMessage = null;
+  notifyListeners();
+
+  try {
+    final token = await authProvider.token;
+    if (token == null) {
+      throw Exception('Authentication token is missing');
+    }
+
+    // Parse id to int if required by PengaduansService
+    int? parsedId = int.tryParse(id);
+    if (parsedId == null) {
+      throw Exception('Invalid pengaduan ID: $id');
+    }
+
+    final message = await _pengaduansService.updatePengaduan(
+      token: token,
+      id: id, // Pass as String to match PengaduansService
+      namaKorban: namaKorban,
+      alamat: alamat,
+      aduan: aduan,
+      kategoriKekerasan: kategoriKekerasan,
+      korban: korban,
+      harapan: harapan,
+      // status: status,
+      evidencePaths: evidencePaths,
+    );
+    // _successMessage = message;
+  } catch (e) {
+    _errorMessage = e.toString();
+    debugPrint('Error updating pengaduan: $e');
+  } finally {
+    _isLoading = false;
+    notifyListeners();
+  }
+}
+  
 }

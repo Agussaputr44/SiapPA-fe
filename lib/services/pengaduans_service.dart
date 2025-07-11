@@ -98,4 +98,65 @@ class PengaduansService {
           'Gagal memuat data: ${errorData['error'] ?? response.body}');
     }
   }
-}
+
+   Future<String> deletePengaduan(String? token, int? id) async {
+    final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.pengaduanDelete(id)));
+    final response = await http.delete(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['message'] ?? 'Berhasil dihapus';
+    } else {
+      throw Exception('Gagal menghapus pengaduan: ${response.reasonPhrase}');
+    }
+  }
+
+Future<void> updatePengaduan({
+  String? token,
+  required String id,
+  required String namaKorban,
+  required String alamat,
+  required String aduan,
+  required String kategoriKekerasan,
+  required String korban,
+  required String harapan,
+  required List<String> evidencePaths,
+}) async {
+  int? parsedId = int.tryParse(id);
+  final url = Uri.parse(ApiConfig.buildUrl(ApiConfig.pengaduanUpdate(parsedId)));
+
+  print('Request URL for update: $url'); // Add this line
+  print("ini token $token"); // This is already good
+
+  final response = await http.put(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
+    },
+    body: jsonEncode({
+      'namaKorban': namaKorban,
+      'alamat': alamat,
+      'aduan': aduan,
+      'kategoriKekerasan': kategoriKekerasan,
+      'korban': korban,
+      'harapan': harapan,
+      'evidencePaths': evidencePaths,
+    }),
+  );
+
+  print('Response status: ${response.statusCode}');
+  print('Response headers: ${response.headers}');
+  print('Response body: ${response.body}');
+  if (response.statusCode == 302) {
+    print('Redirect location: ${response.headers['location']}');
+  }
+  if (response.statusCode != 200 && response.statusCode != 204) {
+    throw Exception('Failed to update pengaduan: ${response.statusCode}');
+  }
+}}
