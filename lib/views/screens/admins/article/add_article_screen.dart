@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:siappa/providers/articles_provider.dart';
+import 'package:siappa/providers/auth_provider.dart';
 import 'package:siappa/providers/upload_media_provider.dart';
 import 'package:siappa/views/screens/admins/widgets/app_bar_widget.dart';
 import 'package:siappa/views/widgets/loading_widget.dart';
@@ -54,7 +55,6 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
       return;
     }
 
-    // Validasi tipe file
     final validExtensions = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'avi'];
     final fileExtension = _selectedFile!.path.split('.').last.toLowerCase();
 
@@ -62,6 +62,10 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
       MessagesWidget.showError(context, "Tipe file tidak didukung.");
       return;
     }
+
+    final authProvider = context.read<AuthProvider>();
+uploadProvider.init(authProvider);
+
 
     try {
       await uploadProvider.upload([_selectedFile!]);
@@ -76,8 +80,10 @@ class _AddArticleScreenState extends State<AddArticleScreen> {
 
       MessagesWidget.showSuccess(context, "Artikel berhasil ditambahkan.");
 
-      Navigator.of(context).pop(true); 
-    } catch (e) {
+      Navigator.of(context).pop(true);
+    } catch (e, stackTrace) {
+      print("Error saat upload/tambah artikel: $e");
+      print(stackTrace);
       MessagesWidget.showError(context, "Terjadi kesalahan saat mengunggah.");
     }
   }

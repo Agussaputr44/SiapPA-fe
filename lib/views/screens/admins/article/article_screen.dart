@@ -48,19 +48,19 @@ class _ArticleScreenState extends State<ArticleScreen> {
               : SingleChildScrollView(
                   child: Column(
                     children: [
-                      FilterWidget(
-                        categories: categories,
-                        selectedCategory: filter.category,
-                        months: months,
-                        selectedMonth: filter.month,
-                        years: years,
-                        selectedYear: filter.year,
-                        onCategoryChanged:
-                            context.read<FiltersProvider>().setCategory,
-                        onMonthChanged:
-                            context.read<FiltersProvider>().setMonth,
-                        onYearChanged: context.read<FiltersProvider>().setYear,
-                      ),
+                      // FilterWidget(
+                      //   categories: categories,
+                      //   selectedCategory: filter.category,
+                      //   months: months,
+                      //   selectedMonth: filter.month,
+                      //   years: years,
+                      //   selectedYear: filter.year,
+                      //   onCategoryChanged:
+                      //       context.read<FiltersProvider>().setCategory,
+                      //   onMonthChanged:
+                      //       context.read<FiltersProvider>().setMonth,
+                      //   onYearChanged: context.read<FiltersProvider>().setYear,
+                      // ),
                       const SizedBox(height: 10),
                       ...articlesProvider.articles.map((artikel) {
                         return ArticleCardWidget(

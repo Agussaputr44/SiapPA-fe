@@ -14,7 +14,7 @@
 /// ```
 class ApiConfig {
   /// Base URL server backend.
-  static const String baseUrl = "https://fancy-quick-lacewing.ngrok-free.app";
+  static const String baseUrl = "http://siappa.polbeng.web.id";
 
   /// Versi API yang digunakan.
   static const String apiVersion = "v1";

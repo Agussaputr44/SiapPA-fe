@@ -335,7 +335,6 @@ class _ProfileUsersScreenState extends State<ProfileUsersScreen> {
                                   color: Colors.white.withOpacity(0.5),
                                   boxShadow: [
                                     BoxShadow(
-                                      
                                       color: Colors.black.withOpacity(0.1),
                                       blurRadius: 20,
                                       offset: const Offset(0, 5),
@@ -748,17 +747,16 @@ class _ProfileUsersScreenState extends State<ProfileUsersScreen> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () async {
-                              // Tutup dropdown dulu
                               await Future.delayed(
                                   const Duration(milliseconds: 100));
 
                               final shouldLogout =
                                   await showCustomConfirmDialog(
                                 context: context,
-                                title: 'Logout Confirmation',
-                                message: 'Are you sure you want to logout?',
-                                confirmText: 'Logout',
-                                cancelText: 'Cancel',
+                                title: 'Konfirmasi Keluar',
+                                message: 'Apakah anda yakin untuk keluar?',
+                                confirmText: 'Ya',
+                                cancelText: 'Batal',
                                 icon: Icons.logout,
                                 iconColor: Colors.red,
                               );

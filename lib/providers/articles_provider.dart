@@ -53,6 +53,7 @@ class ArticlesProvider with ChangeNotifier {
 
     try {
       final token = await authProvider.token;
+      print("ini tokendari artikel $token");
 
       final message =
           await _articlesService.addArticle(token, judul, isi, foto);

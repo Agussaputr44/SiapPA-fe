@@ -228,7 +228,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         MessagesWidget.showSuccess(context,
             authProvider.successMessage ?? "Password berhasil diperbarui.");
 
-        // Clear password fields and exit changing password mode
         _currentPasswordController.clear();
         _newPasswordController.clear();
         _confirmPasswordController.clear();
@@ -237,24 +236,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _isChangingPassword = false;
         });
       } else {
-        // Show error message from provider
         MessagesWidget.showError(context,
             authProvider.errorMessage ?? "Gagal memperbarui password.");
       }
     } catch (e) {
-      // Hide loading
       Navigator.pop(context);
 
-      // Show error message
       MessagesWidget.showError(context, "Gagal memperbarui password: $e");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-        final isLoading = context.watch<UsersProvider>().isLoading;
+    final isLoading = context.watch<UsersProvider>().isLoading;
     return LoadingWidget(
-
       isLoading: isLoading,
       child: Scaffold(
         body: Container(
@@ -267,7 +262,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               colors: [
                 Color.fromRGBO(241, 140, 176, 1),
                 Color.fromRGBO(248, 187, 208, 1),
-
               ],
             ),
           ),
@@ -283,8 +277,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   );
                 }
-      
-                // Show error state
+
                 if (userProvider.errorMessage != null) {
                   return Center(
                     child: Column(
@@ -321,9 +314,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   );
                 }
-      
+
                 final user = userProvider.user;
-      
+
                 return RefreshIndicator(
                   onRefresh: _loadUserData,
                   child: SingleChildScrollView(
@@ -379,9 +372,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                         ),
-      
+
                         const SizedBox(height: 20),
-      
+
                         // Profile Avatar with Shadow
                         Container(
                           decoration: BoxDecoration(
@@ -439,9 +432,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                         ),
-      
+
                         const SizedBox(height: 30),
-      
+
                         // Manage Profile Card
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -468,9 +461,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: Colors.grey[800],
                                 ),
                               ),
-      
+
                               const SizedBox(height: 24),
-      
+
                               // Name Field
                               _buildInputField(
                                 label: 'Name',
@@ -478,9 +471,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 icon: Icons.person_outline,
                                 isEditable: _isEditing,
                               ),
-      
+
                               const SizedBox(height: 20),
-      
+
                               // Email Field
                               _buildInputField(
                                 label: 'Email',
@@ -488,9 +481,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 icon: Icons.email_outlined,
                                 isEditable: false,
                               ),
-      
+
                               const SizedBox(height: 32),
-      
+
                               // Action Buttons
                               if (_isEditing)
                                 Row(
@@ -558,9 +551,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                         ),
-      
+
                         const SizedBox(height: 20),
-      
+
                         // Settings Card
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -580,7 +573,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Settings',
@@ -616,7 +610,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 const SizedBox(height: 16),
                                 ListTile(
                                   leading: const Icon(Icons.lock_outline,
-                                      color: Color.fromARGB(255, 234, 102, 216)),
+                                      color:
+                                          Color.fromARGB(255, 234, 102, 216)),
                                   title: Text(
                                     'Ubah Password',
                                     style: GoogleFonts.poppins(
@@ -642,7 +637,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                               if (_isChangingPassword) ...[
                                 const SizedBox(height: 24),
-      
+
                                 // Current Password Field
                                 _buildPasswordField(
                                   label: 'Password Saat Ini',
@@ -655,9 +650,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     });
                                   },
                                 ),
-      
+
                                 const SizedBox(height: 20),
-      
+
                                 // New Password Field
                                 _buildPasswordField(
                                   label: 'Password Baru',
@@ -670,9 +665,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     });
                                   },
                                 ),
-      
+
                                 const SizedBox(height: 20),
-      
+
                                 // Confirm Password Field
                                 _buildPasswordField(
                                   label: 'Konfirmasi Password Baru',
@@ -685,9 +680,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     });
                                   },
                                 ),
-      
+
                                 const SizedBox(height: 32),
-      
+
                                 // Password Action Buttons
                                 Row(
                                   children: [
@@ -750,54 +745,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                         ),
-      
+
                         const SizedBox(height: 20),
-      
+
                         // Logout Button
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 20),
                           width: double.infinity,
                           child: OutlinedButton(
-                            onPressed:() async {
-                                  // Tutup dropdown dulu
-                                  // Tunggu overlay benar-benar hilang
-                                  await Future.delayed(
-                                      const Duration(milliseconds: 100));
-      
-                                  // GUNAKAN CONTEXT PARENT (_parentContext), BUKAN overlayContext!
-                                  final shouldLogout =
-                                      await showCustomConfirmDialog(
-                                    context: context,
-                                    title: 'Logout Confirmation',
-                                    message: 'Are you sure you want to logout?',
-                                    confirmText: 'Logout',
-                                    cancelText: 'Cancel',
-                                    icon: Icons.logout,
-                                    iconColor: Colors.red,
-                                  );
-                                  if (shouldLogout == true) {
-                                    await authProvider.logout();
-                                    if (!mounted) return;
-                                    Navigator.of(context)
-                                        .pushAndRemoveUntil(
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation,
-                                                secondaryAnimation) =>
-                                            const LoginScreen(),
-                                        transitionsBuilder: (context, animation,
-                                            secondaryAnimation, child) {
-                                          return FadeTransition(
-                                              opacity: animation, child: child);
-                                        },
-                                      ),
-                                      (route) => false,
-                                    );
-                                  }},
+                            onPressed: () async {
+                              // Tutup dropdown dulu
+                              // Tunggu overlay benar-benar hilang
+                              await Future.delayed(
+                                  const Duration(milliseconds: 100));
+
+                              // GUNAKAN CONTEXT PARENT (_parentContext), BUKAN overlayContext!
+                              final shouldLogout =
+                                  await showCustomConfirmDialog(
+                                context: context,
+                                 title: 'Konfirmasi Keluar',
+                                  message: 'Apakah anda yakin untuk keluar?',
+                                  confirmText: 'Ya',
+                                  cancelText: 'Batal',
+                                  icon: Icons.logout,
+                                  iconColor: Colors.red,
+                              );
+                              if (shouldLogout == true) {
+                                await authProvider.logout();
+                                if (!mounted) return;
+                                Navigator.of(context).pushAndRemoveUntil(
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation,
+                                            secondaryAnimation) =>
+                                        const LoginScreen(),
+                                    transitionsBuilder: (context, animation,
+                                        secondaryAnimation, child) {
+                                      return FadeTransition(
+                                          opacity: animation, child: child);
+                                    },
+                                  ),
+                                  (route) => false,
+                                );
+                              }
+                            },
                             style: OutlinedButton.styleFrom(
                               backgroundColor: Colors.white,
                               foregroundColor: Colors.red,
-                              side:
-                                  const BorderSide(color: Colors.red, width: 1.5),
+                              side: const BorderSide(
+                                  color: Colors.red, width: 1.5),
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -819,7 +814,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                         ),
-      
+
                         const SizedBox(height: 40),
                       ],
                     ),
@@ -1017,5 +1012,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-
 }

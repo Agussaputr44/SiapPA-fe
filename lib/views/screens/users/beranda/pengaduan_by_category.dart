@@ -3,10 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:siappa/configs/api_config.dart';
 import 'package:siappa/models/pengaduans_model.dart';
+import 'package:siappa/views/screens/admins/widgets/app_bar_widget.dart';
 import 'package:siappa/views/widgets/loading_widget.dart';
 import '../../../../providers/pengaduans_provider.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../widgets/tittle_custom_widget.dart';
+import '../../admins/pengaduans/detail_pengaduan_screen.dart';
 
 class PengaduanByCategoryScreen extends StatelessWidget {
   const PengaduanByCategoryScreen({Key? key}) : super(key: key);
@@ -68,12 +70,9 @@ class PengaduanByCategoryScreen extends StatelessWidget {
     return LoadingWidget(
       isLoading: context.watch<PengaduansProvider>().isLoading,
       child: Scaffold(
-        appBar: AppBar(
-          title: TitleCustom(title: 'Laporan ${_beautifyCategory(category)}'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context),
-          ),
+        appBar: AppBarWidget(
+          title: 'Laporan ${_beautifyCategory(category)}',
+         subtitle: "Sistem Informasi Aduan dan Perlindungan Perempuan dan Anak",
         ),
         body: Consumer<PengaduansProvider>(
           builder: (context, pengaduansProvider, child) {
@@ -134,11 +133,12 @@ class PengaduanByCategoryScreen extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(
-            context,
-            '/users/pengaduan/detail',
-            arguments: pengaduan,
-          );
+           Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PengaduanDetailScreen(pengaduan: pengaduan),
+      ),
+    );
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(

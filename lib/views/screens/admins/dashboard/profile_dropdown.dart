@@ -116,10 +116,10 @@ class _ProfileDropdownState extends State<ProfileDropdown> {
                                 final shouldLogout =
                                     await showCustomConfirmDialog(
                                   context: _parentContext,
-                                  title: 'Logout Confirmation',
-                                  message: 'Are you sure you want to logout?',
-                                  confirmText: 'Logout',
-                                  cancelText: 'Cancel',
+                                  title: 'Konfirmasi Keluar',
+                                  message: 'Apakah anda yakin untuk keluar?',
+                                  confirmText: 'Ya',
+                                  cancelText: 'Batal',
                                   icon: Icons.logout,
                                   iconColor: Colors.red,
                                 );
